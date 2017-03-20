@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/personalnab/groupedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        if(document.__unid == "New")
+          h3 New Group
+        else
+          h3 #{document.ListName}
+      div.content
+        div.row
+          div.col-sm-12
+            div.form-group
+              label(for="ListName") List Name
+              input.form-control(id="ListName" name="ListName" value="#{document.ListName?document.ListName:''}" required)
+            div.form-group
+              label(for="ListDescription") ListDescription
+              textarea.form-control(id="ListDescription" name="ListDescription" required)
+                | #{document.ListDescription?document.ListDescription:''}
+            div.form-group
+              label(for="Members") Members
+              textarea.form-control(id="Members" name="Members" required)
+                | #{document.Members?document.Members:''}
+
+      div.foot
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")

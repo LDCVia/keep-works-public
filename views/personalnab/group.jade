@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+
+  div.block-flat
+    div.header
+      h3 #{document.ListName}
+        if (document.__iseditable)
+          span.pull-right
+            a.btn.btn-info(href="/personalnab/groups/#{db}")
+              i.fa.fa-chevron-left
+              | Back
+            a.btn.btn-primary(href="/personalnab/groupedit/#{db}/#{document.__unid}" title="Edit")
+              i.fa.fa-edit
+              | &nbsp;Edit
+            a.btn.btn-danger(href="#" onclick="deleteDocument('/personalnab/groupdelete/#{db}/#{document.__unid}')" title="Delete")
+              i.fa.fa-trash
+              | &nbsp;Delete
+        span.pull-right #{moment(document.__created).format(config.datetimeformat)}
+    div.content
+      div.row
+        if (document.ListDescription)
+          div.col-sm-12
+            label Description
+            h5 #{document.ListDescription}
+        if (document.Members)
+          div.col-sm-12
+            label Members
+            h5 #{document.Members}
+        if (document.Comment__parsed)
+          div.col-sm-12
+            div.mail !{sanitizeHtml(document.Comment__parsed, config.rttags)}

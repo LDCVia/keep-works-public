@@ -1,0 +1,44 @@
+extends ../layout
+include ../mixins/pagination
+include ../mixins/nodocumentsfound
+block content
+
+  if(data.data.length > 0)
+    div.content
+      div.mail-inbox
+        div.head
+          div.col-sm-5
+            form.search-form(role="search" action="/#{template}/search/#{db}/#{collection}" method="get")
+              div.input-group
+                input.form-control(name="keywords" type="text" placeholder="Search" value="#{query?query:''}")
+                span.input-group-btn
+                  button.btn.btn-default(type="submit") Search...
+          div.col-sm-6
+            +pagination(1, pages, pageno, '/custom/index/' + db + '/' + collection + '/')
+          div.col-sm-1
+            nav.pull-right.pagination
+              a.btn.btn-default(href="/custom/editcollection/#{db}/#{collection}"  data-popover="popover" data-content="Edit Collection Settings" data-placement="top" data-trigger="hover" style="padding: 6px 11px;")
+                i.fa.fa-cog
+
+        div.mails
+
+          each topic in data.data
+            div.item
+              div
+                span.date.pull-right
+                  if(topic._files)
+                    i.fa.fa-paperclip
+                  | #{moment(topic.__created).fromNowOrNow()}
+                a(href="/custom/document/#{db}/#{topic.__form}/#{topic.__unid}")
+                  if (dbmeta && dbmeta.primaryfield && dbmeta.primaryfield.fieldname && topic[dbmeta.primaryfield.fieldname])
+                    h4.from #{topic[dbmeta.primaryfield.fieldname]}
+                  else
+                    h4.from [Unknown Value]
+                p.msg
+                  if (dbmeta && dbmeta.secondaryfield )
+                    if (dbmeta.secondaryfield.fieldtype == "Names")
+                      span #{formatNotesName(topic[dbmeta.secondaryfield.fieldname])}
+                    else
+                      span #{topic[dbmeta.secondaryfield.fieldname]}
+  else
+    +nodocumentsfound

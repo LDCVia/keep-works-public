@@ -1,0 +1,43 @@
+extends ../layout
+
+block content
+  div
+  div.block-flat
+    div.header
+      h3 #{formatNotesName(document.Who)}&nbsp;
+        if (document.FileThisStatusDoc == "1")
+          span.badge.badge-danger Inactive
+        else
+          span.badge.badge-success Active
+
+        span.pull-right
+          a.btn.btn-info(href="/teamroom/participants/#{db}")
+            i.fa.fa-chevron-left
+            | Back
+          a.btn.btn-primary(href="/teamroom/participantedit/#{db}/#{document.__unid}" title="Edit")
+            i.fa.fa-edit
+            | &nbsp;Edit
+          a.btn.btn-danger(href="#" onclick="deleteDocument('/teamroom/participantdelete/#{db}/#{document.__unid}')" title="Delete")
+            i.fa.fa-trash
+            | &nbsp;Delete
+    div.content
+      if (document.Department)
+        div.form-group
+          label Department
+          h4 #{document.Department}
+      if (document.Location)
+        div.form-group
+          label Location
+          h4 #{document.Location}
+      if (document.Email)
+        div.form-group
+          label Email
+          h4 #{document.Email}
+      if (document.Phone)
+        div.form-group
+          label Phone
+          h4 #{document.Phone}
+      if (document.JobTitle)
+        div.form-group
+          label Job Title
+          h4 #{document.JobTitle}

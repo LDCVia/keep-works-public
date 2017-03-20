@@ -1,0 +1,111 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='KEEP.WORKS lets you manage your team data')
+    meta(name='author', content='KEEP.WORKS')
+    title KEEP.WORKS
+    link(href='/bower_components/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/stylesheets/static.css', rel='stylesheet')
+    link(href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen, projection")
+    link(href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' rel='stylesheet' type='text/css')
+    link(href='//fonts.googleapis.com/css?family=Raleway:300,200,100' rel='stylesheet' type='text/css')
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
+      script(src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
+  body#page-top.index
+    nav.navbar.navbar-default.navbar-fixed-top
+      .container
+        .navbar-header.page-scroll
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.keepworks.navbar-brand(href='#page-top')
+            if (nodeenv == 'beta')
+              img(src="/images/logo-beta.png")
+            else
+              img(src="/images/logo.png")
+            span keep.works
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-right
+            li.hidden
+              a(href='#page-top')
+            li.page-scroll
+              a(href='/#features') Features
+            li.page-scroll
+              a(href="/#pricing") Pricing
+            li.page-scroll
+              a(href='/#about') About
+            if(!email)
+              li.page-scroll
+                a(href="/#signup") Sign up
+            li.page-scroll
+              a(href='/#support') Support
+            if(email)
+              li
+                a(href='/selectdatabase') Open Database
+            else
+              li
+                a(href='/login') Login
+        // /.navbar-collapse
+      // /.container-fluid
+    // Header
+    header
+      .container
+        .row
+          .col-lg-12
+            .intro-text
+              p We'll get in contact with you as soon as registration opens.
+              hr.star-light
+              span.name.keepworks keep.works
+            img.img-responsive(src='images/logo-256.png', alt='')
+    // Footer
+    footer.text-center
+      .footer-above
+        .container
+          .row
+            .footer-col.col-md-4
+              h3 Location
+              p
+                | LDC Via Ltd
+                br
+                | 14 Roseberry Avenue
+                br
+                | London EC1R 4TD
+                br
+                | United Kingdom
+            .footer-col.col-md-4
+              h3 Around the Web
+              ul.list-inline
+                li
+                  a.btn-social.btn-outline(href='http://facebook.com/keepdotworks')
+                    i.fa.fa-fw.fa-facebook
+                li
+                  a.btn-social.btn-outline(href='http://twitter.com/keep_works')
+                    i.fa.fa-fw.fa-twitter
+            .footer-col.col-md-4
+              h3 About <span class="keepworks">keep.works</span>
+              p
+                <span class="keepworks">keep.works</span> lets you manage your team data and is <a href="http://ldcvia.com">built on LDC Via</a>.
+              p
+                a(href='#sla', data-toggle="modal") Service Level Agreement
+              p
+                a(href='#terms', data-toggle="modal") Terms and Conditions
+      .footer-below
+        .container
+          .row
+            .col-lg-12
+              | Copyright &copy; LDC Via 2016
+    .scroll-top.page-scroll.hidden-sm.hidden-xs.hidden-lg.hidden-md
+      a.btn.btn-primary(href='#page-top')
+        i.fa.fa-chevron-up
+    script(src='/bower_components/jquery/dist/jquery.min.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js')
+    script(src='/javascripts/classie.js')
+    script(src='/javascripts/cbpAnimatedHeader.js')
+    script(src='/javascripts/index.js')

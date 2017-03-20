@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  div.row
+    div.col-sm-12.col-md-12
+      form.form-horizontal(role="form" method="post" action="/support")
+        div.block-flat
+          div.header
+            h3 Submit a support request
+          div.content
+            div.form-group
+              label.control-label(for="subject") What do you need help with?
+              select.form-control(name="subject" id="subject")
+                option(value="I want to request a feature") I want to request a feature
+                option(value="I have a billing question") I have a billing question
+                option(value="I'm not receiving emails") I'm not receiving emails
+                option(value="I'm confused about how something works") I'm confused about how something works
+                option(value="I need more databases, documents or storage") I need more databases, documents or storage
+                option(value="I think something is broken") I think something is broken
+                option(value="Other") Other
+            div.form-group
+              label.control-label What's your question, comment or issue?
+              textarea.mceNoEditor.form-control(name="question" id="question" onKeyUp="getSuggestions()")
+            div.form-group
+              label.control-label What's your email address?
+              input.form-control(type="email" name="email" id="email" value="#{user.email}")
+          div.foot
+            input.btn.btn-primary(type="submit" value="Submit this support request")
+
+  div#suggestions
+
+
+block extrajs
+  script(src="/javascripts/support.js")

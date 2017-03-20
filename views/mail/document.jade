@@ -1,0 +1,36 @@
+extends ../layout
+include mixin-response
+
+block content
+  div
+  div.block-flat
+    div.header
+      div.pull-right
+        a.btn.btn-info(href="/mail/index/#{db}")
+          i.fa.fa-chevron-left
+          | Back
+
+      h3 #{document.Subject}
+      h4
+        if (document.AbbreviateFrom)
+          | #{document.AbbreviateFrom}
+        else
+          | #{formatNotesName(document.From)}
+        span.pull-right #{moment(document.__created).format(config.datetimeformat)}
+      if(document._files)
+        div
+          span Files:&nbsp;
+          if(Array.isArray(document._files))
+            each file in document._files
+              a(href="/mail/file/#{db}/Memo/#{document.__unid}/#{file}") #{file}
+              | &nbsp;
+          else
+            a(href="/mail/file/#{db}/Memo/#{document.__unid}/#{document._files}") #{document._files}
+    if (document.Body__parsed)
+      div.mail !{sanitizeHtml(document.Body__parsed, config.rttags)}
+    else
+      div.mail No Body Defined
+
+  if (responses && responses.length > 0)
+    each responsedoc in responses
+      +responsedoc(responsedoc)

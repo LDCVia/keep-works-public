@@ -1,0 +1,36 @@
+extends ../layout
+include ../mixins/pagination
+include ../mixins/nodocumentsfound
+block content
+  div.row
+    each collection in collections
+      if (collection.hidden != '1')
+        div.col-sm-4
+          a(href="/custom/index/#{db}/#{encodeURIComponent(collection.collection)}")
+            div.fd-tile.detail.clean.tile-concrete
+              div.content
+                h3 #{collection.title?collection.title:collection.collection}
+                p #{collection.count}
+              div.icon
+                i.fa.fa-files-o
+  if (dbinfo.hiddencollections)
+    div.panel-group.accordion#accordion
+      div.panel.panel-default
+        div.panel-heading
+          h4.panel-title
+            a.collapsed(data-toggle="collapse" data-parent="#accordion" href="#collapseTwo")
+              i.fa.fa-angle-right
+              | Hidden Collections
+        div.panel-collapse.collapse#collapseTwo
+          div.panel-body
+            div.row
+              each collection in collections
+                if (collection.hidden == '1')
+                  div.col-sm-4
+                    a(href="/custom/index/#{db}/#{encodeURIComponent(collection.collection)}")
+                      div.fd-tile.detail.clean.tile-concrete
+                        div.content
+                          h3 #{collection.title?collection.title:collection.collection}
+                          p #{collection.count}
+                        div.icon
+                          i.fa.fa-files-o

@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  div
+  div.block-flat
+    div.header
+      h3 #{document.STName}&nbsp;
+        span.pull-right
+          a.btn.btn-info(href="/teamroom/subteams/#{db}")
+            i.fa.fa-chevron-left
+            | Back
+          a.btn.btn-primary(href="/teamroom/subteamedit/#{db}/#{document.__unid}" title="Edit")
+            i.fa.fa-edit
+            | &nbsp;Edit
+          a.btn.btn-danger(href="#" onclick="deleteDocument('/teamroom/subteamdelete/#{db}/#{document.__unid}')" title="Delete")
+            i.fa.fa-trash
+            | &nbsp;Delete
+    div.content
+      if (document.Position)
+        div.form-group
+          label Purpose
+          h4 #{document.Position}
+      if (document.STMembers)
+        div.form-group
+          label Members
+          h4 #{document.STMembers}

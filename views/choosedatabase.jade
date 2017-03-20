@@ -1,0 +1,142 @@
+extends layout
+
+block content
+  div.content
+    if (databases.length > 0)
+      div.row#databases
+        each database, index in databases
+          div.col-sm-4.col-md-4.col-lg-3
+            if (database.template == "discussion")
+              div.fd-tile.detail.tile-green(data-intro=(index==0?'Click a database icon to open it':false))
+                a.details(href="/opendatabase/#{database.name}")
+                  span.dbtype Discussion
+                  div.dbicon
+                    img(src="/getdbicon/#{database.name}")
+                  div.content
+                    h3.text-left #{database.title}
+                  span.count
+                    i.fa.fa-files-o(title="#{database.count} documents")
+                    | &nbsp;#{database.count}
+                div.icon
+                  i.fa.fa-comments
+              if (isAdmin)
+                a.ws-edit-icon(href="/editdatabase/#{database.name}")
+                  i.fa.fa-2x.fa-cog
+
+            else if(database.template == "doclibrary")
+              div.fd-tile.detail.tile-red(data-intro=(index==0?'Click a database icon to open it':false))
+                a.details(href="/opendatabase/#{database.name}")
+                  span.dbtype Document Library
+                  div.dbicon
+                    img(src="/getdbicon/#{database.name}")
+                  div.content
+                    h3.text-left #{database.title}
+                  span.count
+                    i.fa.fa-files-o(title="#{database.count} documents")
+                    | &nbsp;#{database.count}
+                div.icon
+                  i.fa.fa-file-o
+              if (isAdmin)
+                a.ws-edit-icon(href="/editdatabase/#{database.name}")
+                  i.fa.fa-2x.fa-cog
+
+            else if(database.template == "mail")
+              div.fd-tile.detail.tile-prusia(data-intro=(index==0?'Click a database icon to open it':false))
+                a.details(href="/opendatabase/#{database.name}")
+                  span.dbtype Mail Archive
+                  div.dbicon
+                    img(src="/getdbicon/#{database.name}")
+                  div.content
+                    h3.text-left #{database.title}
+                  span.count
+                    i.fa.fa-files-o(title="#{database.count} documents")
+                    | &nbsp;#{database.count}
+                div.icon
+                  i.fa.fa-archive
+              if (isAdmin)
+                a.ws-edit-icon(href="/editdatabase/#{database.name}")
+                  i.fa.fa-2x.fa-cog
+
+            else if (database.template == "journal")
+              div.fd-tile.detail.tile-purple(data-intro=(index==0?'Click a database icon to open it':false))
+                a.details(href="/opendatabase/#{database.name}")
+                  span.dbtype Journal
+                  div.dbicon
+                    img(src="/getdbicon/#{database.name}")
+                  div.content
+                    h3.text-left #{database.title}
+                  span.count
+                    i.fa.fa-files-o(title="#{database.count} documents")
+                    | &nbsp;#{database.count}
+                div.icon
+                  i.fa.fa-pencil
+              if (isAdmin)
+                a.ws-edit-icon(href="/editdatabase/#{database.name}")
+                  i.fa.fa-2x.fa-cog
+
+            else if(database.template == "teamroom")
+              div.fd-tile.detail.tile-blue(data-intro=(index==0?'Click a database icon to open it':false))
+                a.details(href="/opendatabase/#{database.name}")
+                  span.dbtype Teamroom
+                  div.dbicon
+                    img(src="/getdbicon/#{database.name}")
+                  div.content
+                    h3.text-left #{database.title}
+                  span.count
+                    i.fa.fa-files-o(title="#{database.count} documents")
+                    | &nbsp;#{database.count}
+                div.icon
+                  i.fa.fa-group
+              if (isAdmin)
+                a.ws-edit-icon(href="/editdatabase/#{database.name}")
+                  i.fa.fa-2x.fa-cog
+
+            else if(database.template == "personalnab")
+              div.fd-tile.detail.tile-orange(data-intro=(index==0?'Click a database icon to open it':false))
+                a.details(href="/opendatabase/#{database.name}")
+                  span.dbtype Address Book
+                  div.dbicon
+                    img(src="/getdbicon/#{database.name}")
+                  div.content
+                    h3.text-left #{database.title}
+                  span.count
+                    i.fa.fa-files-o(title="#{database.count} documents")
+                    | &nbsp;#{database.count}
+                div.icon
+                  i.fa.fa-sort-alpha-asc
+              if (isAdmin)
+                a.ws-edit-icon(href="/editdatabase/#{database.name}")
+                  i.fa.fa-2x.fa-cog
+
+            else
+              div.fd-tile.detail.tile-concrete(data-intro=(index==0?'Click a database icon to open it':false))
+                a.details(href="/opendatabase/#{database.name}")
+                  div.dbicon
+                    img(src="/getdbicon/#{database.name}")
+                  div.content
+                    h3.text-left #{database.title}
+                  span.count
+                    i.fa.fa-files-o(title="#{database.count} documents")
+                    | &nbsp;#{database.count}
+                div.icon
+                  i.fa.fa-folder-o
+              if (isAdmin)
+                a.ws-edit-icon(href="/editdatabase/#{database.name}")
+                  i.fa.fa-2x.fa-cog
+
+
+      div.row
+        div.col-sm-12
+          div.block-flat
+            div.header
+              h3 Using <span class="keepworks">keep.works<span>
+            div.content
+              p You can choose to either import a database by uploading it to our servers or create a new database.
+              p
+                button.btn.btn-default(onclick="introJs().start()") Show Me How
+    else
+      div.jumbotron
+        h3 No Databases Available
+        p You can choose to either import a database by uploading it to our servers or create a new database.
+        p
+          button.btn.btn-default(onclick="introJs().start()") Show Me How

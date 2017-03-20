@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/teamroom/participantedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        if (!document.Who || document.Who == "")
+          h3 New Participant
+        else
+          h3 #{formatNotesName(document.Who)}
+      div.content
+        div.form-group
+          label(for="Who") Name
+          input.form-control(type="text" name="Who" id="Who" value="#{formatNotesName(document.Who)}" placeholder="Name" required)
+        div.form-group
+          label(for="Department") Department
+          input.form-control(type="text" name="Department" id="Department" value="#{document.Department?document.Department:''}" placeholder="Department")
+        div.form-group
+          label(for="Location") Location
+          input.form-control(type="text" name="Location" id="Location" value="#{document.Location?document.Location:''}" placeholder="Location")
+        div.form-group
+          label(for="Email") Email
+          input.form-control(type="text" name="Email" id="Email" value="#{document.Email?document.Email:''}" placeholder="Email")
+        div.form-group
+          label(for="Phone") Phone
+          input.form-control(type="tel" name="Phone" id="Phone" value="#{document.Phone?document.Phone:''}" placeholder="Phone")
+        div.form-group
+          label(for="JobTitle") Job Title
+          input.form-control(type="text" name="JobTitle" id="JobTitle" value="#{document.JobTitle?document.JobTitle:''}" placeholder="Job Title")
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")

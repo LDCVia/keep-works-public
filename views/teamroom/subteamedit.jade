@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/teamroom/subteamedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        if (!document.STName || document.STName == "")
+          h3 New Subteam
+        else
+          h3 #{document.STName}
+      div.content
+        div.form-group
+          label(for="STName") Team Name
+          input.form-control(type="text" name="STName" id="STName" value="#{document.STName}" placeholder="Name" required)
+        div.form-group
+          label(for="Position") Purpose
+          input.form-control(type="text" name="Position" id="Position" value="#{document.Position?document.Position:''}" placeholder="Purpose")
+        div.form-group
+          label(for="STMembers") Members
+          select.form-control(name="STMembers" id="STMembers" multiple="true")
+            each participant in Participants
+              if (document.STMembers && (document.STMembers.indexOf(participant) > -1 || document.STMembers.indexOf(formatNotesName(participant)) > -1))
+                option(value="#{formatNotesName(participant)}" selected) #{formatNotesName(participant)}
+              else
+                option(value="#{formatNotesName(participant)}") #{formatNotesName(participant)}
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")

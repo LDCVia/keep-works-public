@@ -1,0 +1,155 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0')
+    meta(name='description', content='keep.works lets you manage your team data')
+    meta(name='author', content='support@ldcvia.com')
+    meta(name='copyright', content='Copyright (c) 2016 LDC Via')
+    title #{sitetitle} · #{pagetitle}
+    link(href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen, projection")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700")
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style-green.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/custom.css')
+    link(rel='stylesheet', href='/stylesheets/jAlert-v3.css')
+    <!--[if lt IE 9]>
+    script(src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js")
+    script(src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js")
+    <![endif]-->
+  body.cbp-spmenu-push
+    div#cl-wrapper
+      div.cl-sidebar
+        div.cl-toggle
+          i.fa.fa-bars
+        div.cl-navblock
+          div.menu-space
+            div.content
+              div.sidebar-logo
+                div.logo.site-title
+                  a(href="/selectdatabase")
+                    if (nodeenv == 'beta')
+                      img(src="/images/logo-beta.png")
+                    else
+                      img(src="/images/logo.png")
+                    span.keepworks &nbsp;#{sitetitle}
+              ul.cl-vnavigation
+                if(menuitems)
+                  each menuitem in menuitems
+                    li(data-intro=menuitem.dataintro class="#{menuitem.active?'active':''}")
+                      a(href="#{menuitem.link}" data-toggle="tooltip" data-placement="right" title="#{menuitem.label}")
+                        i.fa(class="#{menuitem.icon}")
+                        span #{menuitem.label}
+                  if (db && !hidelogout)
+                    li(class="#{editdatabase?'active':''}")
+                      a(href="/editdatabase/#{db}" role="menuitem")
+                        i.fa.fa-cog
+                        span Database Settings
+                    li
+                      a(href="/selectdatabase" role="menuitem")
+                        i.fa.fa-folder
+                        span Workspace
+                if(!hidelogout)
+                  li.parent
+                    a(href="#")
+                      i.fa.fa-cogs
+                      span Settings
+                    ul.sub-menu
+                      if(isAdmin)
+                        li
+                          a(href="/account" title="Account" accesskey="a" role="menuitem")
+                            i.fa.fa-user
+                            span Account
+                        li
+                          a(href="/reskin" title="Re-skin" role="menuitem")
+                            i.fa.fa-css3
+                            span Re-skin
+                      li
+                        a(href="/support")
+                          i.fa.fa-question
+                          span Support
+                      li
+                        a(href="/logout" title="Logout" accesskey="x" role="menuitem")
+                          i.fa.fa-power-off
+                          span Logout
+                li.footer.text-center
+                  a(href="/")
+                    span.keepworks #{sitetitle}
+                    | &nbsp;home page
+                  br
+                  br
+                  span Powered by <a href="http://ldcvia.com" target="newwin">LDC Via</a> © 2016
+                  br
+                  span (v#{version})
+                  if (nodeenv == 'beta')
+                    br
+                    br
+                    span This is a beta environment.
+                    br
+                    span If you find an issue please <a href="/support">let us know</a>.
+          div.text-right.collapse-button(style="padding:7px 9px;")
+            button#sidebar-collapse.btn.btn-default
+              i.fa.fa-angle-left(style="color:#fff;")
+
+      div.container-fluid#pcont
+        if(false)
+          div.navbar.navbar-default#head-nav
+            div.container-fluid
+              div.navbar-collapse
+                if(!hidelogout)
+                  ul.nav.navbar-nav.navbar-right.user-nav
+                    li.dropdown.profile_menu
+                      a.dropdown-toggle(href="#" data-toggle="dropdown" aria-expanded="false")
+                        | Settings
+                        b.caret
+                      ul.dropdown-menu
+                        if(isAdmin)
+                          li
+                            a(href="/account" accesskey="a" role="menuitem") Account
+                        li
+                          a(href="/support") Support
+                        li
+                          a(href="/logout" accesskey="x" role="menuitem") Logout
+                ul.nav.navbar-nav.not-nav
+                  if(menuitems)
+                    each menuitem in menuitems
+                      li(data-intro=menuitem.dataintro class="#{menuitem.active?'active':''}")
+                        a(href="#{menuitem.link}") #{menuitem.label}
+                    if (db && !hidelogout)
+                      li(class="#{editdatabase?'active':''}")
+                        a(href="/editdatabase/#{db}" role="menuitem") Database Settings
+                      li
+                        a(href="/selectdatabase" role="menuitem") Workspace
+
+        div.cl-mcont
+          div.page-head
+            if (dbicon)
+              img.pull-right.img-rounded(src="#{dbicon}")
+            if(pagetitle)
+              h2.page-header #{pagetitle}
+            if(breadcrumbs)
+              ol.breadcrumb
+                each crumb in breadcrumbs
+                  if (crumb.link)
+                    li
+                      a(href="#{crumb.link}") #{crumb.title}
+                  else
+                    li.active
+                      | #{crumb.title}
+          div.cl-mcont
+            block content
+
+
+    script(src="/bower_components/jquery/dist/jquery.min.js")
+    script(src="/bower_components/bootstrap/dist/js/bootstrap.min.js")
+    script(src="/javascripts/jquery.cookie.js")
+    script(src="/javascripts/jAlert-v3.min.js")
+    script(src="/javascripts/jAlert-functions.min.js")
+    script(src="//cdn.tinymce.com/4/tinymce.min.js")
+    script(src="/javascripts/validator.min.js")
+    script(src="/javascripts/site.js")
+    script(src="/bower_components/intro.js/intro.js")
+    block extrajs
+

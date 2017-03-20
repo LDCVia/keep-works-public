@@ -1,0 +1,100 @@
+extends ../layout
+
+block content
+  div
+  div.block-flat
+    div.header
+      if(dbmeta.allowedit && dbmeta.allowedit == "1" && document.__iseditable)
+        div.pull-right
+          a.btn.btn-info(href="/custom/index/#{db}/#{document.__form}")
+            i.fa.fa-chevron-left
+            | Back
+          a.btn.btn-primary(href="/custom/editdocument/#{db}/#{document.__form}/#{document.__unid}")
+            i.fa.fa-pencil
+            | Edit
+          if (dbmeta.allowresponses == "1")
+            a.btn.btn-primary(href="/custom/editdocument/#{db}/#{dbmeta.responsecollection}?parentid=#{document.__unid}")
+              i.fa.fa-mail-reply
+              | Add Response
+          if (dbmeta.allowdeletions == "1")
+            a.btn.btn-danger(href="#" onclick="confirmAndContinue('Do you want to delete this document?', '/custom/deletedocument/#{db}/#{document.__form}/#{document.__unid}')")
+              i.fa.fa-trash
+              | Delete
+
+      if (document[dbmeta.primaryfield.fieldname])
+        h3 #{document[dbmeta.primaryfield.fieldname]}
+      else
+        h3 [Unknown Value]
+      span.pull-right #{moment(document.__created).format(config.datetimeformat)}
+      if (document[dbmeta.secondaryfield.fieldname])
+        if(dbmeta.secondaryfield.fieldtype == "Names")
+          h4 #{formatNotesName(document[dbmeta.secondaryfield.fieldname])}
+        else
+          h4 #{document[dbmeta.secondaryfield.fieldname]}
+
+
+      if(document._files)
+        div
+          span Files:&nbsp;
+          if(Array.isArray(document._files))
+            each file in document._files
+              a(href="/custom/file/#{db}/#{document.__form}/#{document.__unid}/#{file}") #{file}
+              | &nbsp;
+          else
+            a(href="/custom/file/#{db}/#{document.__form}/#{document.__unid}/#{document._files}") #{document._files}
+        div
+          if(Array.isArray(document._files))
+            each file in document._files
+              if (file.indexOf(".jpg") > -1 || file.indexOf(".png") > -1 || file.indexOf("gif") > -1)
+                img.img-rounded(src="/custom/file/#{db}/#{document.__form}/#{document.__unid}/#{file}")
+          else
+            img.img-rounded(src="/custom/file/#{db}/#{document.__form}/#{document.__unid}/#{document._files}")
+
+
+    div.content
+      each field in metadata.fields
+        if (field.keyfield)
+          div.form-group
+            label #{field.fieldlabel!=""?field.fieldlabel:field.fieldname}
+            if (field.fieldtype == "Names")
+              div #{formatNotesName(document[field.fieldname])}
+            else if(field.fieldtype == "richtext")
+              div.mail !{sanitizeHtml(document[field.fieldname], config.rttags)}
+            else
+              div #{document[field.fieldname]}
+
+  if (dbmeta.allowresponses == "1")
+    a.btn.btn-primary.btn-lg(href="/custom/editdocument/#{db}/#{dbmeta.responsecollection}?parentid=#{document.__unid}") Add Response
+  if (responses.count > 0)
+    h2 Responses
+    each response in responses.data
+      div.block-flat
+        - metaindex = responsemetaindexes.indexOf(response['__form'])
+        div.header
+          span.pull-right #{moment(response.__created).format(config.datetimeformat)}
+          if (response[responsemeta[metaindex].fields[0].fieldname])
+            h3 #{response[responsemeta[metaindex].fields[0].fieldname]}
+          else
+            h3 [Unknown Value]
+
+          if(response._files)
+            div
+              span Files:&nbsp;
+              if(Array.isArray(response._files))
+                each file in response._files
+                  a(href="/custom/file/#{db}/#{response['__form']}/#{response.__unid}/#{file}") #{file}
+                  | &nbsp;
+              else
+                a(href="/custom/file/#{db}/#{response['__form']}/#{response.__unid}/#{response._files}") #{response._files}
+
+        div.content
+          each field in responsemeta[metaindex].fields
+            if (field.keyfield && response[field.fieldname])
+              div.form-group
+                label #{field.fieldlabel!=""?field.fieldlabel:field.fieldname}
+                if (field.fieldtype == "Names")
+                  div #{formatNotesName(response[field.fieldname])}
+                else if(field.fieldtype == "richtext")
+                  div.mail !{sanitizeHtml(response[field.fieldname], config.rttags)}
+                else
+                  div #{response[field.fieldname]}

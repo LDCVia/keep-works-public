@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  div.row
+    div.col-md-12
+      form.form-horizontal(action="/register" method="post" id="register-form" data-toggle="validator" data-focus="firstname")
+        div.block-flat
+          div.content
+            if (couponrequired == "1")
+              p During our beta phase you must have a valid coupon code to complete registration. If you do not have one, please&nbsp;
+                a(href="/support") contact us
+                | &nbsp;for more details.
+
+            div.form-group(class="#{data.firstname==''?'has-error:''}")
+              label.col-sm-3.control-label(for="firstname") First Name
+              div.col-sm-6
+                input.form-control(name="firstname" id="firstname" tabindex="1" placeholder="First Name" value="#{data.firstname}" data-error="Please enter First Name" required)
+                div.help-block.with-errors
+            div.form-group
+              label.col-sm-3.control-label(for="lastname") Last Name
+              div.col-sm-6
+                input.form-control(name="lastname" tabindex="2" placeholder="Last Name" value="#{data.lastname}" data-error="Please enter Last Name" required)
+                div.help-block.with-errors
+            div.form-group
+              label.col-sm-3.control-label(for="email") E-mail Address
+              div.col-sm-6
+                input.form-control(type="email" name="email" tabindex="3" placeholder="Email" value="#{data.email}" autocomplete="off" data-error="That email address is invalid" required)
+                div.help-block.with-errors
+            div.form-group
+              label.col-sm-3.control-label(for="password") Password
+              div.col-sm-6
+                input.form-control(name="password" id="password" type="password" tabindex="4" placeholder="Password" autocomplete="new-password" value="#{data.password}" data-error="Please enter a password" required)
+                div.help-block.with-errors
+            div.form-group
+              label.col-sm-3.control-label(for="confirmpassword") Confirm Password
+              div.col-sm-6
+                input.form-control(name="confirmpassword" type="password" tabindex="5" placeholder="Confirm Password" autocomplete="new-password" value="#{data.confirmpassword}" data-error="Please confirm the password" data-match="#password" data-match-error="The passwords do not match" required)
+                div.help-block.with-errors
+            div.form-group
+              div.col-sm-3 &nbsp;
+              div.col-sm-6
+                div.g-recaptcha(data-sitekey="#{recaptchakey}")
+                span.help-block.with-errors
+
+            if(error)
+              div.alert.alert-danger.alert-white-alt.rounded
+                div.icon
+                  i.fa.fa-times-circle
+                strong Error!
+                | #{error}
+          div.foot
+            input.btn.btn-primary(type="submit" tabindex="5" name="save" value="Submit")
+
+block extrajs
+  script(src='https://www.google.com/recaptcha/api.js')

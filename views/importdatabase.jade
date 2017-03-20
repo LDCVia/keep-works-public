@@ -1,0 +1,88 @@
+extends layout
+
+block content
+    div.row
+      div.col-sm-12
+        div.block-flat
+          div.header
+            h3 Let us do the work
+          div.content
+            p Use this page to upload your old, legacy Notes or Domino application.
+            p We'll convert it automatically for you and send you an email when it's ready for you to use.
+
+    div.row
+      div.col-sm-6
+        if(databases.length < maxdbs)
+          iframe(src="#{uploadurl}?email=#{email}&apikey=#{apikey}" style="height: 400px; width: 100%;" frameBorder="0")
+        else
+          div.block-flat.info-box
+            div.header
+              h3 Maximum Databases Reached
+            div.content
+              p Your current plan allows you to have #{maxdbs} databases. You have created #{databases.length}.
+            div.foot
+              a.btn.btn-primary(href="/account") Upgrade your account...
+
+      div.col-sm-6
+        div.block-flat.info-box
+          div.header
+            h3 What we need from you
+          div.content
+            p	For us to be able to upload your database, the following conditions&nbsp;
+              strong must
+              | &nbsp;be met:
+            ul
+              li The database must not be locally encrypted
+              li The database must have default access set to Manager level
+              li The Default ACL entry must be able to read all documents in the database
+              li All scheduled agents must be disabled
+            p If any of these conditions are not met, the migration will fail.
+      if (uploadstatus.length > 0)
+        div.col-sm-12
+          div.block-flat
+            div.header
+              h3 Upload Status
+            div.content
+              table.table.table-hover
+                thead
+                  tr
+                    th File name
+                    th Uploaded
+                    th Last Updated
+                    th File Size (MB)
+                    th Status
+                tbody
+                  each upload in uploadstatus
+                    tr(class="#{upload.status=='0. Queued for processing'||upload.status=='2. Currently processing'?'warning':upload.status=='1. Successfully processed'?'success':'danger'}" href="##{upload.created}" data-toggle="modal")
+                      td #{upload.filename}
+                      td #{moment(upload.created).format(config.datetimeformat)}
+                      td #{moment(upload.modified).format(config.datetimeformat)}
+                      td.text-right #{upload.size.toFixed(2)}
+                      td
+                        div #{upload.status}
+          each upload in uploadstatus
+            div.modal.fade(id="#{upload.created}" role="dialog")
+              div.modal-dialog
+                div.modal-content
+                  div.modal-header
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                      span(aria-hidden="true") &times;
+                    h4.modal-title #{upload.filename}
+                  div.modal-body
+                    div.form-group
+                      label Created
+                      div #{moment(upload.created).format(config.datetimeformat)}
+                    div.form-group
+                      label Last updated
+                      div #{moment(upload.modified).format(config.datetimeformat)}
+                    div.form-group
+                      label File Size
+                      div #{upload.size.toFixed(2)}MB
+                    div.form-group
+                      label Status
+                      div #{upload.status}
+                    div.form-group
+                      label Summary
+                      div.white-space-pre #{upload.summary}
+                  div.modal-footer
+                    button.btn.btn-default(type="button" data-dismiss="modal") Close

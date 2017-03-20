@@ -1,0 +1,45 @@
+extends ../layout
+include ../mixins/pagination
+include ../mixins/nodocumentsfound
+block content
+  div.tab-container
+    ul.nav.nav-tabs(role="tablist")
+      li.active(role="presentation")
+        a(href="/personalnab/index/#{db}") People
+      li(role="presentation")
+        a(href="/personalnab/groups/#{db}") Groups
+      br
+
+    div.tab-content
+      if (data.data.length > 0)
+        div.content
+          div.block-flat
+            div.content
+              div.row
+                div.col-sm-6
+                  form.search-form(role="search" action="/#{template}/search/#{db}" method="get")
+                    div.input-group
+                      input.form-control(name="keywords" type="text" placeholder="Search" value="#{query?query:''}")
+                      span.input-group-btn
+                        button.btn.btn-default(type="submit") Search...
+                div.col-sm-6
+                  +pagination(1, pages, parseInt(pageno, 10), '/personalnab/index/' + db + '/')
+
+              div.row
+                div.col-sm-12
+                  div.list-group
+                    each person in data.data
+                      div.col-sm-6
+                        a.list-group-item(href="/personalnab/person/#{db}/#{person.__unid}")
+                          h5.list-group-item-heading #{person.FullName}
+                          div.pull-right
+                            i.fa.fa-building
+                            | #{person.CompanyName}
+                          div
+                            i.fa.fa-mobile-phone
+                            | #{person.OfficePhoneNumber}
+                          div
+                            i.fa.fa-envelope
+                            | #{person.MailAddress}
+      else
+        +nodocumentsfound

@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/journal/cleansheetedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        h3 Clean Sheet
+      div.content
+        div.form-group
+          label(for="DiaryDate") Diary Date
+          div.input-group.date
+            input.form-control(type='text' name="DiaryDate" id="DiaryDate" value="#{moment(document.DiaryDate).format(config.dateformat)}")
+            span.input-group-addon
+              span.glyphicon.glyphicon-calendar
+        div.form-group
+          label(for="Body") Body
+          textarea(name="Body" id="Body") #{document.Body__parsed}
+        div.form-group
+          label(for="upload") File
+          input.form-control(id="upload" name="upload" type="file")
+        if (document._files && document._files.length > 0)
+          div.form-group
+            label Delete Files
+            if (Array.isArray(document._files))
+              div.btn-group
+                each file in document._files
+                  a.btn.btn-danger(href="#" onclick="deleteFile(this, '#{file}', '/journal/file/#{db}/CleanSheet/#{document.__unid}/#{file}')")
+                    i.fa.fa-trash
+                    | &nbsp;Delete '#{file}'
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")
+
+block extrajs
+  script(type="text/javascript" src="/bower_components/moment/min/moment.min.js")
+  script(type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")
+  link(rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")

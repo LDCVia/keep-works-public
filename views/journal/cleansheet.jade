@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+  div
+  div.block-flat
+    div.header
+      h3 Clean Sheet
+        span.pull-right
+          a.btn.btn-info(href="/journal/cleansheets/#{db}")
+            i.fa.fa-chevron-left
+            | Back
+          a.btn.btn-primary(href="/journal/cleansheetedit/#{db}/#{document.__unid}" title="Edit")
+            i.fa.fa-edit
+            | &nbsp;Edit
+          a.btn.btn-danger(href="#" onClick="deleteDocument('/journal/cleansheetdelete/#{db}/#{document.__unid}')" title="Delete")
+            i.fa.fa-trash
+            | &nbsp;Delete
+      h4
+        span Diary Date: #{moment(document.DiaryDate).format(config.dateformat)}
+        span.pull-right Created: #{moment(document.__created).format(config.datetimeformat)}
+      if(document.Categories)
+        div
+          span Categories:&nbsp;
+          if(Array.isArray(document.Categories))
+            each category in document.Categories
+              a(href="/journal/category/#{db}/#{encodeURIComponent(category)}") #{category} &nbsp;
+          else
+            a(href="/journal/category/#{db}/#{encodeURIComponent(document.Categories)}") #{document.Categories}
+      if(document._files)
+        div
+          span Files:&nbsp;
+          if(Array.isArray(document._files))
+            each file in document._files
+              a(href="/journal/file/#{db}/JournalEntry/#{document.__unid}/#{file}") #{file}
+              | &nbsp;
+          else
+            a(href="/journal/file/#{db}/JournalEntry/#{document.__unid}/#{document._files}") #{document._files}
+    if (document.Body__parsed)
+      div.mail !{sanitizeHtml(document.Body__parsed, config.rttags)}
+    else
+      div.mail No Body Defined

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  if(isAdmin)
+    form.form-horizontal.group-border-dashed#postform(method="post" action="/reskin")
+      div.block-flat
+        div.header
+          h3 Re-skin Site
+        div.content
+          div.form-group
+            p This CSS will be loaded last on each page in your site, you can restyle any element on the page by overriding styles.
+            textarea.mceNoEditor.form-control(type="text" name="customcss" id="customcss" placeholder="Enter Custom CSS Here" rows="25")
+              | #{customcss}
+        div.foot
+          input.btn.btn-primary(type="submit" name="save" value="Submit")
+
+block extrajs

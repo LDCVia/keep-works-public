@@ -1,0 +1,59 @@
+extends ../layout
+
+block content
+  div
+  div.block-flat
+    div.header
+      if(document.__parentid)
+        div.pull-right
+          a.btn.btn-default(href="/mail/response/#{db}/#{document.__parentid}")
+            i.fa.fa-level-up
+            | View Parent
+      h3 #{document.Subject}
+      h4
+        if (document.AbbreviateFrom)
+          | #{document.AbbreviateFrom}
+        else
+          | #{formatNotesName(document.From)}
+        span.pull-right #{moment(document.__created).format(config.datetimeformat)}
+      if(document._files)
+        div
+          span Files:&nbsp;
+          if(Array.isArray(document._files))
+            each file in document._files
+              a(href="/mail/file/#{db}/Memo/#{document.__unid}/#{file}") #{file}
+              | &nbsp;
+          else
+            a(href="/mail/file/#{db}/Memo/#{document.__unid}/#{document._files}") #{document._files}
+    if (document.Body__parsed)
+      div.mail !{sanitizeHtml(document.Body__parsed, config.rttags)}
+    else
+      div.mail No Body Defined
+
+  if (responses && responses.length > 0)
+    each responsedoc in responses
+      div.block-flat
+        div.header
+          if(responsedoc.Subject)
+            h3 #{responsedoc.Subject}
+          else
+            h3 #{responsedoc.__unid}
+          h4
+            if (responsedoc.AbbreviateFrom)
+              | #{responsedoc.AbbreviateFrom}
+            else
+              | #{formatNotesName(responsedoc.From)}
+            span.pull-right #{moment(responsedoc.__created).format(config.datetimeformat)}
+          if(responsedoc._files)
+            div
+              strong Files:
+              if(Array.isArray(responsedoc._files))
+                each file in responsedoc._files
+                  a.label.label-default(href="/mail/file/#{db}/#{responsedoc.__form}/#{responsedoc.__unid}/#{file}") #{file}
+              else
+                a.label.label-default(href="/mail/file/#{db}/#{responsedoc.__form}/#{responsedoc.__unid}/#{document._files}") #{responsedoc._files}
+        div.content
+          if (responsedoc.Body__parsed)
+            div.mail !{sanitizeHtml(responsedoc.Body__parsed, config.rttags)}
+          else
+            div.mail No Body Defined

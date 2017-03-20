@@ -1,0 +1,204 @@
+extends ../layout
+
+block content
+
+  div.block-flat
+    div.header
+      h3 #{document.FullName}
+        if (document.__iseditable)
+          span.pull-right
+            a.btn.btn-info(href="/personalnab/index/#{db}")
+              i.fa.fa-chevron-left
+              | Back
+            a.btn.btn-primary(href="/personalnab/personedit/#{db}/#{document.__unid}" title="Edit")
+              i.fa.fa-edit
+              | &nbsp;Edit
+            a.btn.btn-danger(href="#" onclick="deleteDocument('/personalnab/persondelete/#{db}/#{document.__unid}')" title="Delete")
+              i.fa.fa-trash
+              | &nbsp;Delete
+      h4 #{document.CompanyName}
+        span.pull-right #{moment(document.__created).format(config.datetimeformat)}
+      if(document._files)
+        div
+          span Files:&nbsp;
+          if(Array.isArray(document._files))
+            each file in document._files
+              a(href="/doclibrary/file/#{db}/Document/#{document.__unid}/#{file}") #{file}
+              | &nbsp;
+          else
+            a(href="/doclibrary/file/#{db}/Document/#{document.__unid}/#{document._files}") #{document._files}
+    div.content
+      div.row
+        if (document.JobTitle)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Job Title
+            h5 #{document.JobTitle}
+        if (document.MailAddress)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Primary Address
+            if(document.MailAddress.indexOf("@") > -1)
+              a(href="mailto:#{document.MailAddress}")
+                h5 #{document.MailAddress}
+            else if(document.MailAddress.idexOf("http"))
+              a(href="#{document.MailAddress}")
+                h5 #{document.MailAddress}
+            else
+              h5 #{document.MailAddress}
+        if (document.InternetAddress)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Internet Address
+            if (document.InternetAddress.indexOf("http") > -1)
+              a(href="#{document.InternetAddress}")
+                h5 #{document.InternetAddress}
+            else
+              h5 #{document.InternetAddress}
+        if (document.PrimaryPhoneNumber)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Primary Phone
+            a(href="tel:#{document.PrimaryPhoneNumber}")
+              h5 #{document.PrimaryPhoneNumber}
+        if (document.email_1)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Default Email
+            a(href="mailto:#{document.email_1}")
+              h5 #{document.email_1}
+        if (document.miscPhone1)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Misc Email 1
+            a("mailto:#{document.miscPhone1}")
+              h5 #{document.miscPhone1}
+        if (document.mobileEmail)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Mobile Email
+            a(href="mailto:#{document.mobileEmail}")
+              h5 #{document.mobileEmail}
+        if (document.miscPhone2)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Misc Email 2
+            a(href="mailto:#{document.miscPhone2}")
+              h5 #{document.miscPhone2}
+        if (document.miscPhone3)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Misc Email 3
+            a(href="mailto:#{document.miscPhone3}")
+              h5 #{document.miscPhone3}
+        if (document.OfficePhoneNumber)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Office Phone
+            a(href="tel:#{document.OfficePhoneNumber}")
+              h5 #{document.OfficePhoneNumber}
+        if (document.PhoneNumber)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Home Phone
+            a(href="tel:document.PhoneNumber")
+              h5 #{document.PhoneNumber}
+        if (document.OfficeFaxPhoneNumber)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Office Fax
+            h5 #{document.OfficeFaxPhoneNumber}
+        if (document.PhoneNumber_6)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Pager Number
+            h5 #{document.PhoneNumber_6}
+        if (document.PhoneNumber_8)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Assistant Number
+            a(href="tel:#{document.PhoneNumber_8}")
+              h5 #{document.PhoneNumber_8}
+        if (document.HomeFaxPhoneNumber)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Fax 2
+            h5 #{document.HomeFaxPhoneNumber}
+        if (document.PersPager)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Mobile 2
+            a(href="tel:#{document.PersPager}")
+              h5 #{document.PersPager}
+        if (document.PhoneNumber_9)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Business 2
+            a(href="tel:document.PhoneNumber_9")
+              h5 #{document.PhoneNumber_9}
+        if (document.PhoneNumber_10)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Home 2
+            a(href="tel:document.PhoneNumber_10")
+              h5 #{document.PhoneNumber_10}
+        if (document.SametimeLogin)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Messaging ID
+            h5 #{document.SametimeLogin}
+        if (document.Department)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Department
+            h5 #{document.Department}
+        if (document.Location)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Location
+            h5 #{document.Location}
+        if (document.Manager)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Manager
+            h5 #{document.Manager}
+        if (document.Assistant)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Assistant
+            h5 #{document.Assistant}
+        if (document.Website)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Website
+            a(href="#{document.Website}")
+              h5 #{document.Website}
+        if (document.Blogsite)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Blogsite
+            a(href="#{document.Blogsite}")
+              h5 #{document.Blogsite}
+        if (document.Spouse)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Spouse
+            h5 #{document.Spouse}
+        if (document.Children)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Children
+            h5 #{document.Children}
+        if (document.Birthday)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Birthday
+            h5 #{document.Birthday}
+        if (document.Anniversary)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Anniversary
+            h5 #{document.Anniversary}
+        if (document.Custom1)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Custom1
+            h5 #{document.Custom1}
+        if (document.Custom2)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Custom2
+            h5 #{document.Custom2}
+        if (document.Custom3)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Custom3
+            h5 #{document.Custom3}
+        if (document.officeaddress)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Office Address
+            a(href="http://maps.google.com/?q=#{document.officeaddress.join(',')}")
+              h5 #{document.officeaddress.join(", ")}
+        if (document.address)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Address
+            a(href="http://maps.google.com/?q=#{document.address.join(',')}")
+            h5 #{document.address.join(', ')}
+        if (document.otheraddress)
+          div.col-sm-12.col-md-6.col-lg-4
+            label Other Address
+            a(href="http://maps.google.com/?q=#{document.otheraddress.join(',')}")
+              h5 #{document.otheraddress.join(', ')}
+
+
+        if (document.Comment__parsed)
+          div.col-sm-12
+            div.mail !{sanitizeHtml(document.Comment__parsed, config.rttags)}

@@ -1,0 +1,142 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/teamroom/documentedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        h3 New Topic
+      div.content
+        div.form-group
+          label(for="DocType") Document Type
+          select.form-control(name="DocType" id="DocType")
+            each doctype in DocTypes
+              if (doctype != "")
+                if (document.DocType && document.DocType.indexOf(doctype) > -1)
+                  option(value="#{doctype}" selected) #{doctype}
+                else
+                  option(value="#{doctype}") #{doctype}
+        if(dbinfo.meta && dbinfo.meta.security == "1")
+          div.form-group
+            label(for="MarkPrivate") Mark Private&nbsp;
+            if(!document.readers || document.readers == "")
+              input(type="checkbox" name="MarkPrivate" value="1")
+            else
+              input(type="checkbox" name="MarkPrivate" value="1" checked)
+        div.form-group
+          label(for="Subject") Subject
+          input.form-control(type="text" name="Subject" id="Subject" value="#{document.Subject}" placeholder="Subject" required)
+        div.form-group.aifield
+          label(for="AIPriority") Priority
+          select.form-control(name="AIPriority" id="AIPriority")
+            each priority in priorities
+              if (document.AIPriority && document.AIPriority.indexOf(priority.value) > -1)
+                option(value="#{priority.value}" selected) #{priority.label}
+              else
+                option(value="#{priority.value}") #{priority.label}
+        div.form-group
+          label(for="Categories") Categories
+          select.form-control(name="Categories" id="Categories" multiple="true")
+            each category in CategoryOptions
+              if (category != "")
+                if (document.Categories && document.Categories.indexOf(category) > -1)
+                  option(value="#{category}" selected) #{category}
+                else
+                  option(value="#{category}") #{category}
+        div.form-group
+          label(for="NewCategories") Other Categories
+          input.form-control(type="text" name="NewCategories" id="NewCategories" value="#{document.NewCategories?document.NewCategories:''}" placeholder="New Category 1, New Category 2")
+        div.form-group
+          label(for="Milestones") Associated Event
+          select.form-control(name="Milestones" id="Milestones")
+            option(value="")
+            each milestone in Milestones
+              if (milestone != "")
+                if (document.Milestones && document.Milestones.indexOf(milestone) > -1)
+                  option(value="#{milestone}" selected) #{milestone}
+                else
+                  option(value="#{milestone}") #{milestone}
+        div.form-group
+          label(for="SubteamInterest") Associated Subteam(s)
+          select.form-control(name="SubteamInterest" id="SubteamInterest" multiple="true")
+            each subteam in Subteams
+              if (subteam != "")
+                if (document.SubteamInterest && document.SubteamInterest.indexOf(subteam) > -1)
+                  option(value="#{subteam}" selected) #{subteam}
+                else
+                  option(value="#{subteam}") #{subteam}
+        div.form-group.mtgfield.aifield
+          label(for="DueDate") Due Date
+          div.input-group.date
+            input.form-control(type='text' name="DueDate" id="DueDate" value="#{moment(document.DueDate).format(config.dateformat)}")
+            span.input-group-addon
+              span.glyphicon.glyphicon-calendar
+        div.form-group.mtgfield
+          label(for="MtgDate") Meeting Date
+          div.input-group.date
+            input.form-control(type='text' name="MtgDate" id="MtgDate" value="#{moment(document.MtgDate).format(config.dateformat)}")
+            span.input-group-addon
+              span.glyphicon.glyphicon-calendar
+        div.form-group.mtgfield
+          label(for="MtgTime") Meeting Time
+          div.input-group.time
+            input.form-control(type='text' name="MtgTime" id="MtgTime" value="#{moment(document.MtgTime).format(config.timeformat)}")
+            span.input-group-addon
+              span.glyphicon.glyphicon-time
+        div.form-group.mtgfield
+          label(for="Duration") Duration (mins)
+          input.form-control(type="number" name="Duration" id="Duration" value="#{document.Duration}" placeholder="Duration (mins)")
+        div.form-group.mtgfield
+          label(for="Location") Location
+          input.form-control(type="text" name="Location" id="Location" value="#{document.Location}" placeholder="Location")
+        div.form-group
+          label.aifield Assignees:&nbsp;
+          label.mtgfield Attendees:&nbsp;
+          label.discfield.reffield Reviewers:&nbsp;
+          select.form-control(name="Subteam1" id="Subteam1" multiple="true")
+            each subteam in Subteams
+              if (subteam != "")
+                if (document.Subteam1 && document.Subteam1.indexOf(subteam) > -1)
+                  option(value="#{subteam}" selected) #{subteam}
+                else
+                  option(value="#{subteam}") #{subteam}
+          select.form-control(name="PriNameSelection" id="PriNameSelection" multiple="true")
+            each participant in Participants
+              if (participant != "")
+                if (document.PriNameSelection && document.PriNameSelection.indexOf(participant) > -1)
+                  option(value="#{formatNotesName(participant)}" selected) #{formatNotesName(participant)}
+                else
+                  option(value="#{formatNotesName(participant)}") #{formatNotesName(participant)}
+
+        div.form-group
+          label(for="Body") Body
+          textarea(name="Body" id="Body") #{document.Body__parsed}
+        div.form-group
+          label(for="upload") File
+          input.form-control(id="upload" name="upload" type="file")
+        if (document._files && document._files.length > 0)
+          div.form-group
+            label Delete Files
+            if (Array.isArray(document._files))
+              div.btn-group
+                each file in document._files
+                  a.btn.btn-danger(href="#" onclick="deleteFile(this, '#{file}', '/teamroom/file/#{db}/MainTopic/#{document.__unid}/#{file}')")
+                    i.fa.fa-trash
+                    | &nbsp;Delete '#{file}'
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        input(type="hidden" name="From" value="#{document.From?document.From:''}")
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")
+
+block extrajs
+  script(type="text/javascript" src="/bower_components/moment/min/moment.min.js")
+  script(type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")
+  link(rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")
+  script(src="/javascripts/teamroom.js")

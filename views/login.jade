@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  div.row
+    div.col-sm-12.col-md-12.col-lg-6.col-lg-offset-3
+      div.login-container
+        form.form-horizontal(style="margin-bottom: 0px !important;" action="/login#{db?'/'+db:''}" method="post" id="login" data-focus="username" data-toggle="validator")
+          div.block-flat
+            div.header
+              h3.text-center #{pagetitle}
+            div.content
+              div.form-group
+                div.col-sm-12
+                  div.input-group
+                    span.input-group-addon
+                      i.fa.fa-user
+                    input.form-control(type="email" tabindex="1" name="username" id="username" size="25" value="" placeholder="Email" required)
+              div.form-group
+                div.col-sm-12
+                  div.input-group
+                    span.input-group-addon
+                      i.fa.fa-lock
+                    input.form-control(type="password" tabindex="2" placeholder="Password" id="password" name="password" required)
+              if(error)
+                div.alert.alert-danger.alert-white-alt.rounded
+                  div.icon
+                    i.fa.fa-times-circle
+                  strong Error!&nbsp;
+                  | #{error}
+
+            div.foot
+              input(type="hidden" value="#{redirectto?redirectto:''}" name="redirectto")
+              input.btn.btn-primary(type="submit" tabindex="3" name="login" value="Login")
+              a.btn.btn-default(href="/forgottenpassword" tabindex="4") Forgotten Password
+              a.btn.btn-default(href="/register" tabindex="5") Register

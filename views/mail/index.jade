@@ -1,0 +1,32 @@
+extends ../layout
+include ../mixins/pagination
+include ../mixins/nodocumentsfound
+block content
+  if(data.data.length > 0)
+    div.content
+      div.mail-inbox
+        div.head
+          div.col-sm-6
+            form.search-form(role="search" action="/#{template}/search/#{db}" method="get")
+              div.input-group
+                input.form-control(name="keywords" type="text" placeholder="Search" value="#{query?query:''}")
+                span.input-group-btn
+                  button.btn.btn-default(type="submit") Search...
+          div.col-sm-6
+            +pagination(1, pages, pageno, '/mail/index/' + db + '/')
+
+        div.mails
+          each topic in data.data
+            div.item
+              div
+                span.date.pull-right
+                  if(topic._files)
+                    i.fa.fa-paperclip
+                  | #{moment(topic.__created).fromNowOrNow()}
+                a(href="/mail/document/#{db}/#{topic.__unid}")
+                  h4.from #{topic.Subject}
+                p.msg
+                  span
+                    | #{formatNotesName(topic.From)}
+  else
+    +nodocumentsfound

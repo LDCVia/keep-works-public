@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px"
+	 height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
+<g id="Background">
+	<rect x="0.5" y="0.5" fill="#EEEEEE" stroke="#DDDDDD" stroke-miterlimit="10" width="27" height="27"/>
+</g>
+<g id="Main_Shape">
+	<rect x="7" y="7" fill="#9C9C9C" width="6" height="2"/>
+	<rect x="7" y="11" fill="#9C9C9C" width="14" height="1"/>
+	<rect x="7" y="20" fill="#9C9C9C" width="14" height="1"/>
+	<rect x="7" y="15" fill="#9C9C9C" width="6" height="2"/>
+</g>
+<g id="Layer_4">
+	<path fill="#D45748" d="M9.025,7.161c0,0,9.899,9.899,11.313,11.313s0,2.829,0,2.829s-2.121,2.121-3.535,3.535
+		c-1.415,1.414-2.829,0-2.829,0S4.075,14.939,2.661,13.525c-1.414-1.414,0-2.828,0-2.828s2.122-2.122,3.536-3.536
+		S9.025,7.161,9.025,7.161z"/>
+	<rect x="7" y="12" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 30.9459 19.1818)" fill="#873630" width="9" height="8"/>
+	<polygon fill="#D45748" points="26,2 20,2 26,8 	"/>
+</g>
+</svg>

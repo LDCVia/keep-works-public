@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/teamroom/eventedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        if (!document.EventSummary || document.EventSummary == "")
+          h3 New Event
+        else
+          h3 #{document.EventSummary}
+      div.content
+        div.form-group
+          label(for="EventSummary") Milestone / Event
+          input.form-control(type="text" name="EventSummary" id="EventSummary" value="#{document.EventSummary}" placeholder="Event Summary" required)
+        div.form-group
+          label(for="EventDate") Date
+          div.input-group.date
+            input.form-control(type='text' name="EventDate" id="EventDate" value="#{moment(document.EventDate?document.EventDate:new Date()).format(config.dateformat)}")
+            span.input-group-addon
+              span.glyphicon.glyphicon-calendar
+        div.form-group
+          label(for="EventDetail") Detail
+          input.form-control(type="text" name="EventDetail" id="EventDetail" value="#{document.EventDetail?document.EventDetail:''}" placeholder="Event Detail")
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")
+
+block extrajs
+  script(type="text/javascript" src="/bower_components/moment/min/moment.min.js")
+  script(type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js")
+  link(rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css")

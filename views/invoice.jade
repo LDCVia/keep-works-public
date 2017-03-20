@@ -1,0 +1,75 @@
+doctype html
+html
+  head
+    title LDC Via Invoice
+    link(rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title Invoice
+  body
+    .wrapper
+      div#wrap
+        .container.content
+          img.logo.pull-right.img-responsive(src="/images/logo.png" style="padding: 10px;")
+          div.companydetails
+            h1 LDC Via Limited
+            h4 24 Ivymount Road
+            h4 London SE27 0NB
+            h4 United Kingdom
+            div
+              b VAT Number:
+              | GB196 8874 28
+          br
+          div.row.clientdetails.well
+            div.col-sm-6
+              if (org)
+                div #{org.company}
+                div #{org.address1}
+                div #{org.address2}
+                div #{org.city}
+                div #{org.state} #{org.postcode}
+                div #{org.country}
+                if (org.vatid)
+                  div VAT: #{org.vatid}
+            div.col-sm-6
+              div.invoicesummary.pull-right
+                h4
+                  label Invoice #:&nbsp;
+                  if (org.customerid)
+                    span.invoicenumber #{org.customerid.split('_')[1].toUpperCase()}-#{index}
+                  else
+                    span.invoicenumber Error getting invoice number
+                h4
+                  label Invoice Date:&nbsp;
+                  span.invoicedate #{formatDate(invoice.date*1000)}
+                h4
+                  label Amount Due:&nbsp;
+                  span.amountdue £#{formatNumber(invoice.total / 100)} GBP
+          div.invoicedetails
+            table.table
+              thead
+                tr
+                  th Item
+                  th.text-right Cost
+              tbody
+                each line in invoice.lines.data
+                  tr
+                    td Subscription: #{line.plan.name}
+                    td.text-right £#{formatNumber(line.amount/100)} GBP
+              tfoot
+                tr.active
+                  th Subtotal
+                  td.text-right £#{formatNumber(invoice.subtotal / 100)} GBP
+                if (invoice.discount)
+                  tr.active
+                    th Discount "#{invoice.discount.coupon.id} (#{invoice.discount.coupon.percent_off}% off)"
+                    td.text-right -£#{formatNumber((invoice.subtotal - (invoice.total + invoice.tax)) / 100)} GBP
+                if (invoice.tax_percent && invoice.tax_percent > 0)
+                  tr.active
+                    th VAT #{invoice.tax_percent}%
+                    td.text-right £#{formatNumber(invoice.tax / 100)} GBP
+                tr.active
+                  th Total
+                  td.text-right £#{formatNumber(invoice.total / 100)} GBP

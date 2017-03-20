@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  div
+  div.block-flat
+    div.header
+      h3 #{document.EventSummary}&nbsp;
+        span.pull-right
+          a.btn.btn-info(href="/teamroom/events/#{db}")
+            i.fa.fa-chevron-left
+            | Back
+          a.btn.btn-primary(href="/teamroom/eventedit/#{db}/#{document.__unid}" title="Edit")
+            i.fa.fa-edit
+            | &nbsp;Edit
+          a.btn.btn-danger(href="#" onclick="deleteDocument('/teamroom/eventdelete/#{db}/#{document.__unid}')" title="Delete")
+            i.fa.fa-trash
+            | &nbsp;Delete
+    div.content
+      if (document.EventSummary)
+        div.form-group
+          label Milestone / Event
+          h4 #{document.EventSummary}
+      if (document.EventDate)
+        div.form-group
+          label Date
+          h4 #{moment(document.EventDate).format(config.dateformat)}
+      if (document.EventDetail)
+        div.form-group
+          label Details
+          h4 #{document.EventDetail}

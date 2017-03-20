@@ -1,0 +1,70 @@
+extends ../layout
+
+block content
+  div
+  form#postform(method="post" action="/custom/editdocument/#{db}/#{collection}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        if (document[dbmeta.primaryfield.fieldname])
+          h3 #{document[dbmeta.primaryfield.fieldname]}
+        else
+          h3 New
+        if (document[dbmeta.secondaryfield.fieldname])
+          if(dbmeta.secondaryfield.fieldtype == "Names")
+            h4 #{formatNotesName(document[dbmeta.secondaryfield.fieldname])}
+          else
+            h4 #{document[dbmeta.secondaryfield.fieldname]}
+
+
+        if(document._files)
+          div
+            span Files:&nbsp;
+            if(Array.isArray(document._files))
+              each file in document._files
+                a(href="/custom/file/#{db}/#{document.__form}/#{document.__unid}/#{file}") #{file}
+                | &nbsp;
+            else
+              a(href="/custom/file/#{db}/#{document.__form}/#{document.__unid}/#{document._files}") #{document._files}
+
+      div.content
+        each field in metadata.fields
+          if (field.keyfield || field.fieldname == dbmeta.primaryfield.fieldname || field.fieldname == dbmeta.secondaryfield.fieldname)
+            div.form-group
+              label(for="#{field.fieldname}") #{field.fieldlabel!=""?field.fieldlabel:field.fieldname}
+              if (field.fieldtype == "Names" || field.fieldtype == "Readers" || field.fieldtype == "Authors")
+                select.form-control(name="#{field.fieldname}" id="#{field.fieldname}" multiple required=(field.mandatory))
+                  each orguser in orgusers
+                    option(value="#{orguser}" selected=(document[field.fieldname] && document[field.fieldname].indexOf(orguser) > -1)) #{orguser}
+                  if(document[field.fieldname] && Array.isArray(document[field.fieldname]))
+                    each existinguser in document[field.fieldname]
+                      option(value="#{existinguser}") #{formatNotesName(existinguser)}
+              else if(field.fieldtype == "richtext")
+                textarea(name="#{field.fieldname}" id="#{field.fieldname}") #{document[field.fieldname]?document[field.fieldname]:""}
+              else if(field.fieldtype == "number" || field.fieldtype == "tel" || field.fieldtype == "url" || field.fieldtype == "email")
+                input.form-control(type="#{field.fieldtype}" name="#{field.fieldname}" id="#{field.fieldname}" value="#{document[field.fieldname]?document[field.fieldname]:''}" required=(field.mandatory))
+              else if(field.fieldtype == 'select' || field.fieldtype == 'selectmulti')
+                select.form-control(name="#{field.fieldname}" id="#{field.fieldname}" multiple=(field.fieldtype=='selectmulti') required=(field.mandatory))
+                  if(field.combooptions)
+                    each selectoption in field.combooptions
+                      option(value="#{selectoption}" selected=(document[fieldfieldname] && document[field.fieldname].indexOf(selectoption) > -1)) #{selectoption}
+              else
+                input.form-control(name="#{field.fieldname}" id="#{field.fieldname}" value="#{document[field.fieldname]?document[field.fieldname]:''}" required=(field.mandatory))
+        if(dbmeta.allowattachments == "1")
+          div.form-group
+            label(for="upload") File
+            input.form-control(id="upload" name="upload" type="file")
+
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        if(document.__parentid)
+          input(type="hidden" name="__parentid" value="#{document.__parentid?document.__parentid:''}")
+        input(type="hidden" name="__createdby" value="#{document.__createdby?document.__createdby:''}")
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")

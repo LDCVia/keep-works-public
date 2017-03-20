@@ -1,0 +1,167 @@
+extends layout
+
+block content
+  if(ccerror)
+    div.alert.alert-danger
+      p #{ccerror}
+  if(planerror)
+    div.alert.alert-danger
+      p #{planerror}
+  if(error)
+    div.alert.alert-danger
+      p #{error}
+
+  if (userdata.isAdmin)
+    form(action="/adduser" method="post" id="user-form" data-toggle="validator")
+      div.block-flat
+        div.header
+          h3 Add New User
+        div.content
+          div.form-group
+            label(for="newuseremail") New User Email
+            input.form-control(type="text" name="newuseremail" placeholder="New User Email" required)
+        div.foot
+          input.btn.btn-primary(type="submit" name="save" value="Add New User")
+
+    div.block-flat
+      div.header
+        h3 Users
+      div.content
+        ul.list-group
+          - each user in users
+            li.list-group-item
+              if(user != userdata.email)
+                a.pull-right(href="#" title="Remove user" onclick="removeUser('#{user}')")
+                  i.fa.fa-trash
+              a(href='/user/#{encodeURIComponent(user)}') #{user}
+
+    form(action="/updateplan" method="post" id="plan-form")
+      div.block-flat
+        div.header
+          h3 Plan
+        div.content
+          div.form-group
+            label(for="plan") Plan
+            select.form-control(name="plan")
+              option(value="noplan") No Plan Selected
+              each subscription in subscriptions
+                if (orgdata.subscription && subscription.id == orgdata.subscription.plan.id)
+                  option(value="#{subscription.id}" selected) #{subscription.name}
+                else
+                  option(value="#{subscription.id}") #{subscription.name}
+          if(planerror)
+            div.alert.alert-danger
+              p #{planerror}
+        div.foot
+          input.btn.btn-primary(type="submit" name="save" value="Update Plan")
+
+    form(action="/updatecc" method="post" id="register-form" data-toggle="validator")
+      div.block-flat
+        div.header
+          h3 Update Payment Method
+        div.content
+          div.form-group
+            label(for="ccnumber") Card Number
+            input.form-control(type="number" name="ccnumber" placeholder="1234-5678-9012-3456" data-stripe="number" required)
+          div.form-group
+            label(for="cvcnumber") CVC
+            input.form-control(type="number" name="cvcnumber" placeholder="123" data-stripe="cvc" required)
+          div.form-group
+            label(for="expmonth") Expiration
+            div.row
+              div.col-md-2
+                input.form-control(type="number" name="expmonth" placeholder="MM" data-stripe="exp-month" required)
+              div.col-md-2
+                input.form-control(type="number" name="expyear" placeholder="YYYY" data-stripe="exp-year" required)
+
+          if(ccerror)
+            div.alert.alert-danger
+              p #{ccerror}
+        div.foot
+          input.btn.btn-primary(type="submit" name="save" value="Update Payment Method")
+
+    form(action="/updatevat" method="post" id="vat-form" data-toggle="validator")
+      div.block-flat
+        div.header
+          h3 VAT Identification
+        div.content
+          p If you’re a registered business, enter your VAT identification number to remove VAT from your monthly bill.
+          div.form-group
+            label(for="vat") VAT ID
+            input.form-control(type="text" name="vat" placeholder="VAT ID" value="#{orgdata.vatid}")
+          p If you do not enter your Address and / or VAT registration details, you will be charged VAT of 20% on each invoice.
+          div.form-group
+            label(for="company") Company name
+            input.form-control(placeholder="Company Name" name="company" id="company" value="#{orgdata.company}")
+          div.form-group
+            label(for="address1") Address
+            input.form-control(placeholder="Address Line 1" name="address1" id="address1" value="#{orgdata.address1}")
+          div.form-group
+            input.form-control(placeholder="Address Line 2" name="address2" id="address2" value="#{orgdata.address2}")
+          div.form-group
+            input.form-control(placeholder="City" name="city" id="city" value="#{orgdata.city}")
+          div.form-group
+            input.form-control(placeholder="State" name="state" id="state" value="#{orgdata.state}")
+          div.form-group
+            input.form-control(placeholder="Post Code" name="postcode" id="postcode" value="#{orgdata.postcode}")
+          div.form-group
+            select.form-control(name="country" id="country")
+              option(value="" selected=(orgdata.country =="")) Select a country
+              each country in countries
+                option(value="#{country}" selected=(orgdata.country == country)) #{country}
+
+          if(error)
+            div.alert.alert-danger
+              p #{error}
+        div.foot
+          input.btn.btn-primary(type="submit" name="save" value="Update VAT Identification")
+
+
+
+    div.block-flat
+      div.header
+        h3 Invoices
+      div.content
+        - if (invoices.data.length)
+            table.no-border
+              thead.no-border
+                tr
+                  th Date
+                  th Description
+                  th Amount (Pounds Sterling)
+                  th
+              tbody.no-border-x.no-border-y
+              - var invno = invoices.data.length;
+              - each invoice, index in invoices.data
+                tr.invoicerow(invoiceid=invoice.id)
+                  td= formatDatetime(invoice.date * 1000)
+                  td
+                    if (invoice.lines.data)
+                      | #{invoice.lines.data[0].plan.name}
+                  td= "£" + invoice.total / 100
+                  td
+                    a(href="/invoice/#{invoice.id}?index=#{invno--}" target="newwin")
+                      i.fa.fa-file-pdf-o.fa-3(title="Export PDF" alt="Export PDF")
+
+    div.block-flat
+      form(action="/deleteaccount" method="post" id="delete-form" data-toggle="validator")
+        div.header
+          h3 Delete Account
+        div.content
+          div.form-group
+            label(for="confirmdelete") Type "confirm" to delete your account
+            input.hidden(name="test" id="test" value="confirm")
+            input.form-control(placeholder="Type 'confirm' to delete your account" name="confirmdelete" id="confirmdelete" data-error="Type 'confirm' to delete your account" data-match="#test" data-match-error="Type 'confirm' to delete your account" required)
+        div.foot
+          input.btn.btn-danger(type="button" value="Delete Account" onclick="deleteAccount()")
+  else
+    div.block-flat
+      div.header
+        h3 You need to be an administrator
+      div.content This page is only available to administrators
+
+
+
+block extrajs
+  script(src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js")
+  script(src="/javascripts/register.js")

@@ -1,0 +1,140 @@
+extends layout
+
+block content
+  div.row
+    div.col-sm-6
+      div.block-flat
+        div.header
+          h3 Database Stats
+        div.content.overflow-hidden
+          script.
+            var dbstatsdata = !{JSON.stringify(collections)};
+
+          div#dbstats(style="height: 300px; padding: 0px; position: relative;")
+
+      if(isAdmin)
+        form.form-horizontal.group-border-dashed#postform(method="post" action="/editdatabase/#{dbinfo.db}" data-toggle="validator")
+          div.block-flat
+            div.header
+              h3 Modify Database Settings
+            div.content
+              div.form-group
+                label.col-sm-3.control-label(for="db") Name
+                div.col-sm-9
+                  input.form-control(type="text" name="db" id="title" value="#{dbinfo.db}" placeholder="Name" disabled)
+              div.form-group
+                label.col-sm-3.control-label(for="title") Title
+                div.col-sm-9
+                  input.form-control(type="text" name="title" id="title" value="#{dbinfo.title}" placeholder="Title" required)
+              div.form-group(class="#{!dbinfo.template||dbinfo.template==''?'has-error has-danger':''}")
+                label.col-sm-3.control-label(for="template") Template
+                div.col-sm-9
+                  select.form-control(name="template" id="template" onchange="toggleSecurityField()")
+                    option(value="") Select Database Template
+                    if(dbinfo.template == "discussion")
+                      option(value="discussion" selected) Discussion
+                    else
+                      option(value="discussion") Discussion
+                    if(dbinfo.template == "doclibrary")
+                      option(value="doclibrary" selected) Document Library
+                    else
+                      option(value="doclibrary") Document Library
+                    if(dbinfo.template == "journal")
+                      option(value="journal" selected) Journal
+                    else
+                      option(value="journal") Journal
+                    if(dbinfo.template == "mail")
+                      option(value="mail" selected) Mail
+                    else
+                      option(value="mail") Mail
+                    if(dbinfo.template == "personalnab")
+                      option(value="personalnab" selected) Personal Address Book
+                    else
+                      option(value="personalnab") Personal Address Book
+                    if(dbinfo.template == "teamroom")
+                      option(value="teamroom" selected) Teamroom
+                    else
+                      option(value="teamroom") Teamroom
+                    if(dbinfo.template == "custom")
+                      option(value="custom" selected) Custom (You define how things look)
+                    else
+                      option(value="custom") Custom (You define how things look)
+              div.form-group.security
+                div.col-sm-offset-3.col-sm-9
+                  if(dbinfo.meta && dbinfo.meta.security == "1")
+                    input.icheck(type="checkbox" value="1" name="security" checked)
+                  else
+                    input.icheck(type="checkbox" value="1" name="security")
+                  label.control-label(for="security" data-popover="popover" data-trigger="hover" data-placement="top" title="Document Security" data-content="If document security is enabled, then it is possible to restrict visibility of some documents to specified individuals or groups.") &nbsp;Enable Document Level Security
+            div.foot
+              input.btn.btn-primary(type="submit" name="save" value="Submit")
+              a.btn.btn-danger(href="#" onclick="deleteDatabase('/editdatabase/#{dbinfo.db}')") Delete Database
+        form.form-horizontal.group-border-dashed#setdbiconform(method="post" action="/setdbicon/#{dbinfo.db}")
+          div.block-flat
+            div.header
+              h3 Database Icon
+            div.content
+              div#image-cropper
+                div.row
+                  div.col-md-12
+                    div.cropit-preview
+                div.row
+                  div.col-md-1
+                    i.fa.fa-rotate-left.rotate-ccw-btn
+                  div.col-md-8
+                    input.cropit-image-zoom-input(type="range")
+                  div.col-md-1
+                    i.fa.fa-rotate-right.rotate-cw-btn
+                  div.col-md-12
+                    input.cropit-image-input(name="imageupload" id="imageupload" type="file")
+                    input.hidden-image-data#imagedata(type="hidden" name="imagedata")
+            div.foot
+              button.btn.btn-primary(type="submit") Set Icon
+              a.btn.btn-default(href="/getdbicon/#{dbinfo.db}?filename=icon") Download
+              button.btn.btn-danger#deletedatabaseimage Delete Icon
+
+
+    div.col-sm-6
+      div.block-flat
+        div.header
+          h3 Database Activity
+        div.content.overflow-hidden
+          script.
+            var dbactivitydata = !{JSON.stringify(activity)};
+
+          div#dbactivity(style="height: 300px; padding: 0px; position: relative;")
+      if(isAdmin)
+        div.block-flat
+          div.header
+            h3 Access Control
+          div.content
+            p The following people have access to the database
+            p.text-muted (As Super User you have access to all databases)
+
+            div.mail-inbox
+              div.mails
+                each dbuser in dbusers
+                  div.item
+                    div
+                      a.pull-right(href="#" title="Database Settings" onclick="removeUserFromDatabase('#{dbinfo.db}', '#{dbuser}')")
+                        i.fa.fa-trash
+                      h4.from #{dbuser}
+
+              div.form-group
+                div.input-group
+                  select.form-control(name="adduser" id="adduser")
+                    option(value="") Select user to add
+                    each orguser in orgusers
+                      option(value="#{orguser}") #{orguser}
+                  span.input-group-btn
+                    button.btn.btn-primary(type="button" onclick="addUserToDatabase('#{dbinfo.db}')") Add User
+
+block extrajs
+  script.
+    var db = "#{dbinfo.db}";
+  link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css")
+  // script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js")
+  script(src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js")
+  script(src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js")
+  script(src="/javascripts/jquery.cropit.js")
+  script(src="/javascripts/editdatabase.js")

@@ -1,0 +1,179 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/personalnab/personedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        if(document.__unid == "New")
+          h3 New Person
+        else
+          h3 #{document.FullName}
+      div.content
+        div.row
+          div.col-sm-6
+            div.form-group
+              label(for="FirstName") First Name
+              input.form-control(id="FirstName" name="FirstName" value="#{document.FirstName?document.FirstName:''}" required)
+            div.form-group
+              label(for="MiddleInitial") MiddleInitial
+              input.form-control(id="MiddleInitial" name="MiddleInitial" value="#{document.MiddleInitial?document.MiddleInitial:''}")
+            div.form-group
+              label(for="LastName") Last Name
+              input.form-control(id="LastName" name="LastName" value="#{document.LastName?document.LastName:''}" required)
+            div.form-group
+              label(for="Title") Title
+              input.form-control(id="Title" name="Title" value="#{document.Title?document.Title:''}")
+            div.form-group
+              label(for="Suffix") Suffix
+              input.form-control(id="Suffix" name="Suffix" value="#{document.Suffix?document.Suffix:''}")
+            div.form-group
+              label(for="CompanyName") Company Name
+              input.form-control(id="CompanyName" name="CompanyName" value="#{document.CompanyName?document.CompanyName:''}")
+            div.form-group
+              label(for="JobTitle") Job Title
+              input.form-control(id="JobTitle" name="JobTitle" value="#{document.JobTitle?document.JobTitle:''}")
+            div.form-group
+              label(for="MailAddress") Primary Address
+              input.form-control(type="email" id="MailAddress" name="MailAddress" value="#{document.MailAddress?document.MailAddress:''}")
+            div.form-group
+              label(for="InternetAddress") Internet Address
+              input.form-control(type="url" id="InternetAddress" name="InternetAddress" value="#{document.InternetAddress?document.InternetAddress:''}")
+            div.form-group
+              label(for="PrimaryPhoneNumber") Primary Phone
+              input.form-control(type="tel" id="PrimaryPhoneNumber" name="PrimaryPhoneNumber" value="#{document.PrimaryPhoneNumber?document.PrimaryPhoneNumber:''}")
+            div.form-group
+              label(for="primaryAddress") Primary Address
+              input.form-control(id="primaryAddress" name="primaryAddress" value="#{document.primaryAddress?document.primaryAddress:''}")
+            div.form-group
+              label(for="email_1") Default Email
+              input.form-control(type="email" id="email_1" name="email_1" value="#{document.email_1?document.email_1:''}")
+            div.form-group
+              label(for="miscPhone1") Misc Email 1
+              input.form-control(type="email" id="miscPhone1" name="miscPhone1" value="#{document.miscPhone1?document.miscPhone1:''}")
+            div.form-group
+              label(for="mobileEmail") Mobile Email
+              input.form-control(type="email" id="mobileEmail" name="mobileEmail" value="#{document.mobileEmail?document.mobileEmail:''}")
+            div.form-group
+              label(for="miscPhone2") Misc Email 2
+              input.form-control(type="email" id="miscPhone2" name="miscPhone2" value="#{document.miscPhone2?document.miscPhone2:''}")
+            div.form-group
+              label(for="miscPhone3") Misc Email 3
+              input.form-control(type="email" id="miscPhone3" name="miscPhone3" value="#{document.miscPhone3?document.miscPhone3:''}")
+            div.form-group
+              label(for="OfficePhoneNumber") Office Phone
+              input.form-control(type="tel" id="OfficePhoneNumber" name="OfficePhoneNumber" value="#{document.OfficePhoneNumber?document.OfficePhoneNumber:''}")
+            div.form-group
+              label(for="PhoneNumber") Home Phone
+              input.form-control(type="tel" id="PhoneNumber" name="PhoneNumber" value="#{document.PhoneNumber?document.PhoneNumber:''}")
+            div.form-group
+              label(for="OfficeFaxNumber") Office Fax
+              input.form-control(type="tel" id="OfficeFaxNumber" name="OfficeFaxNumber" value="#{document.OfficeFaxNumber?documentOfficeFaxNumber:''}")
+            div.form-group
+              label(for="PhoneNumber_6") Pager Number
+              input.form-control(type="tel" id="PhoneNumber_6" name="PhoneNumber_6" value="#{document.PhoneNumber_6?document.PhoneNumber_6:''}")
+            div.form-group
+              label(for="PhoneNumber_8") Assistant Number
+              input.form-control(type="tel" id="PhoneNumber_8" name="PhoneNumber_8" value="#{document.PhoneNumber_8?document.PhoneNumber_8:''}")
+            div.form-group
+              label(for="HomeFaxPhoneNumber") Fax 2
+              input.form-control(type="tel" id="HomeFaxPhoneNumber" name="HomeFaxPhoneNumber" value="#{document.HomeFaxPhoneNumber?document.HomeFaxNumber:''}")
+            div.form-group
+              label(for="PersPager") Mobile 2
+              input.form-control(type="tel" id="PersPager" name="PersPager" value="#{document.PersPager?document.PersPager:''}")
+            div.form-group
+              label(for="PhoneNumber_9") Business 2
+              input.form-control(type="tel" id="PhoneNumber_9" name="PhoneNumber_9" value="#{document.PhoneNumber_9?document.PhoneNumber_9:''}")
+            div.form-group
+              label(for="PhoneNumber_10") Home 2
+              input.form-control(type="tel" id="PhoneNumber_10" name="PhoneNumber_10" value="#{document.PhoneNumber_10?document.PhoneNumber_10:''}")
+
+          div.col-sm-6
+            div.form-group
+              label Office Address
+              input.form-control(id="OfficeStreetAddress" name="OfficeStreetAddress" value="#{document.OfficeStreetAddress?document.OfficeStreetAddress:''}" placeholder="Street Address")
+              input.form-control(id="OfficeCity" name="OfficeCity" value="#{document.OfficeCity?document.OfficeCity:''}" placeholder="City")
+              input.form-control(id="OfficeState" name="OfficeState" value="#{document.OfficeState?document.OfficeState:''}" placeholder="State")
+              input.form-control(id="OfficeZip" name="OfficeZip" value="#{document.OfficeZip?document.OfficeZip:''}" placeholder="Zip")
+              input.form-control(id="OfficeCountry" name="OfficeCountry" value="#{document.OfficeCountry?document.OfficeCountry:''}" placeholder="Country")
+            div.form-group
+              label Address
+              input.form-control(id="StreetAddress" name="StreetAddress" value="#{document.StreetAddress?document.StreetAddress:''}" placeholder="Street Address")
+              input.form-control(id="City" name="City" value="#{document.City?document.City:''}" placeholder="City")
+              input.form-control(id="State" name="State" value="#{document.State?document.State:''}" placeholder="State")
+              input.form-control(id="Zip" name="Zip" value="#{document.Zip?document.Zip:''}" placeholder="Zip")
+              input.form-control(id="Country" name="Country" value="#{document.Country?document.Country:''}" placeholder="Country")
+            div.form-group
+              label Other Address
+              input.form-control(id="OtherStreetAddress" name="OtherStreetAddress" value="#{document.OtherStreetAddress?document.OtherStreetAddress:''}" placeholder="Street Address")
+              input.form-control(id="OtherCity" name="OtherCity" value="#{document.OtherCity?document.OtherCity:''}" placeholder="City")
+              input.form-control(id="OtherState" name="OtherState" value="#{document.OtherState?document.OtherState:''}" placeholder="State")
+              input.form-control(id="OtherZip" name="OtherZip" value="#{document.OtherZip?document.OtherZip:''}" placeholder="Zip")
+              input.form-control(id="OtherCountry" name="OtherCountry" value="#{document.OtherCountry?document.OtherCountry:''}" placeholder="Country")
+
+            div.form-group
+              label(for="upload") File
+              input.form-control(id="upload" name="upload" type="file")
+            if (document._files && document._files.length > 0)
+              div.form-group
+                label Delete Files
+                if (Array.isArray(document._files))
+                  div.btn-group
+                    each file in document._files
+                      a.btn.btn-danger(href="#" onclick="deleteFile(this, '#{file}', '/personalnab/file/#{db}/Person/#{document.__unid}/#{file}')")
+                        i.fa.fa-trash
+                        | &nbsp;Delete '#{file}'
+
+            div.form-group
+              label(for="SametimeLogin") Messaging ID
+              input.form-control(id="SametimeLogin" name="SametimeLogin" value="#{document.SametimeLogin?document.SametimeLogin:''}")
+            div.form-group
+              label(for="Department") Department
+              input.form-control(id="Department" name="Department" value="#{document.Department?document.Department:''}")
+            div.form-group
+              label(for="Location") Location
+              input.form-control(id="Location" name="Location" value="#{document.Location?document.Location:''}")
+            div.form-group
+              label(for="Assistant") Assistant
+              input.form-control(id="Assistant" name="Assistant" value="#{document.Assistant?document.Assistant:''}")
+            div.form-group
+              label(for="Manager") Manager
+              input.form-control(id="Manager" name="Manager" value="#{document.Manager?document.Manager:''}")
+            div.form-group
+              label(for="Website") Website
+              input.form-control(type="url" id="Website" name="Website" value="#{document.Website?document.Website:''}")
+            div.form-group
+              label(for="Blogsite") Blogsite
+              input.form-control(type="url" id="Blogsite" name="Blogsite" value="#{document.Blogsite?document.Blogsite:''}")
+            div.form-group
+              label(for="Spouse") Spouse
+              input.form-control(id="Spouse" name="Spouse" value="#{document.Spouse?document.Spouse:''}")
+            div.form-group
+              label(for="Children") Children
+              input.form-control(id="Children" name="Children" value="#{document.Children?document.Children:''}")
+            div.form-group
+              label(for="Birthday") Birthday
+              input.form-control(id="Birthday" name="Birthday" value="#{document.Birthday?document.Birthday:''}")
+            div.form-group
+              label(for="Anniversary") Anniversary
+              input.form-control(id="Anniversary" name="Anniversary" value="#{document.Anniversary?document.Anniversary:''}")
+            div.form-group
+              label(for="Custom1") Custom1
+              input.form-control(id="Custom1" name="Custom1" value="#{document.Custom1?document.Custom1:''}")
+            div.form-group
+              label(for="Custom2") Custom2
+              input.form-control(id="Custom2" name="Custom2" value="#{document.Custom2?document.Custom2:''}")
+            div.form-group
+              label(for="Custom3") Custom3
+              input.form-control(id="Custom3" name="Custom3" value="#{document.Custom3?document.Custom3:''}")
+
+      div.foot
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")

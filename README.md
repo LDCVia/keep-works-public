@@ -1,2 +1,3 @@
-# keep-works-public
-An open source version of KEEP.WORKS
+# KEEP.WORKS
+
+KEEP.WORKS is a node.js application built using LDC Via as a back end. 

@@ -1,0 +1,64 @@
+extends layout
+
+block content
+  div.row
+    div.col-sm-6
+      form(action="/user/#{otheruserdata.email}" method="post" id="user-form" data-toggle="validator")
+        div.block-flat
+          div.header
+            h3 User Details
+          div.content
+            div.form-group
+              label(for="email") Email
+              input.form-control(type="text" name="email" placeholder="Email" value="#{otheruserdata.email}" data-error="Please enter the email address of the user" required)
+            if (otheruserdata.email !== userdata.email)
+              div.form-group
+                label(for="usernames") Alternate Names (separate with semi colon)
+                p These are names that the user might have had in Notes.
+                p For example "Fred Bloggs/US/Acme"
+                  br
+                  | or "CN=Fred Bloggs/OU=US/O=Acme"
+                textarea.mceNoEditor.form-control(name="usernames" rows="5")
+                  | #{usernames.join("; ")}
+                p You only need to complete this field if you want to make use of readers and authors fields where the user is named specifically.
+              div.form-group
+                label(for="groups") Groups (separate with semi colon)
+                p These are groups that the user belongs to which will give access to documents.
+                p For example "US-Managers" or "LocalDomainAdmins"
+                textarea.mceNoEditor.form-control(name="groups" rows="5")
+                  | #{groups.join("; ")}
+          div.foot
+          input.btn.btn-primary(type="submit" name="save" value="Submit")
+          if (otheruserdata.email != userdata.email)
+            a.btn.btn-danger(href="#" onclick="removeUser('#{otheruserdata.email}')") Delete User
+    if (otheruserdata.email !== userdata.email)
+      div.col-sm-6
+        div.block-flat
+          div.header
+            h3 Databases
+          div.content
+            ul.list-group
+              if (otheruserdata.databases.length > 0)
+                each database in otheruserdata.databases
+                  li.list-group-item
+                    a.pull-right(href="#" onclick="removeUserFromDatabase('#{database}', '#{otheruserdata.email}', '/user/#{encodeURIComponent(otheruserdata.email)}')")
+                      i.fa.fa-trash
+                    |#{database}
+              else
+                li.list-group-item No access to any databases
+            div.form-group
+              div.input-group
+                select.form-control(name="adddatabase" id="adddatabase")
+                  option(value="") Select database to add
+                  each database in databases
+                    option(value="#{database.name}") #{database.title}
+                span.input-group-btn
+                  button.btn.btn-primary(type="button" onclick="addDatabaseToUser('#{otheruserdata.email}')") Add Database
+    else
+      div.col-sm-6
+        div.block-flat
+          div.header
+            h3 Other Settings
+          div.content
+            p As the administrator for your site you automatically have access to all databases and documents.
+            p You can manage other users you create to control which databases and documents they can see.

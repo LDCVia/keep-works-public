@@ -1,0 +1,131 @@
+extends ../layout
+include mixin-response
+
+block content
+  div
+  div.block-flat
+    div.header
+      h3 #{document.DocType}: #{document.Subject}
+        span.pull-right
+          a.btn.btn-info(href="/teamroom/index/#{db}")
+            i.fa.fa-chevron-left
+            | Back
+          a.btn.btn-primary(href="/teamroom/documentedit/#{db}/#{document.__unid}" title="Edit")
+            i.fa.fa-edit
+            | &nbsp;Edit
+          a.btn.btn-danger(href="#" onclick="deleteDocument('/teamroom/documentdelete/#{db}/#{document.__unid}')" title="Delete")
+            i.fa.fa-trash
+            | &nbsp;Delete
+      h4
+        if (document.AbbreviateFrom)
+          a(href="/teamroom/user/#{db}/#{encodeURIComponent(document.From)}") #{document.AbbreviateFrom}
+        else
+          a(href="/teamroom/user/#{db}/#{encodeURIComponent(document.From)}") #{formatNotesName(document.From)}
+        span.pull-right #{moment(document.__created).format(config.datetimeformat)}
+      if (document.DocType == "Action Item" && document.AIPriority)
+        div
+          span
+            strong Priority:&nbsp;
+            | #{document.AIPriority}
+      if(document.Categories)
+        div
+          span
+            strong Categories:&nbsp;
+            if(Array.isArray(document.Categories))
+              each category in document.Categories
+                a(href="/teamroom/category/#{db}/#{encodeURIComponent(category)}") #{category} &nbsp;
+            else
+              a(href="/teamroom/category/#{db}/#{encodeURIComponent(document.Categories)}") #{document.Categories}
+      if(document.Milestones)
+        div
+          span
+            strong Milestones:&nbsp;
+            | #{document.Milestones}
+      if(document.SubteamInterest)
+        div
+          span
+            strong Associated Subteam(s):&nbsp;
+            if(Array.isArray(document.SubteamInterest))
+              each subteam in document.SubteamInterest
+                | #{subteam}
+                | &nbsp;
+            else
+              | #{document.SubteamInterest}
+      if(document._files)
+        div
+          span
+            strong Files:&nbsp;
+            if(Array.isArray(document._files))
+              each file in document._files
+                a(href="/teamroom/file/#{db}/MainTopic/#{document.__unid}/#{file}") #{file}
+                | &nbsp;
+            else
+              a(href="/teamroom/file/#{db}/MainTopic/#{document.__unid}/#{document._files}") #{document._files}
+      if(document.DocType == "Meeting")
+        div
+          if (document.DueDate)
+            span
+              strong Due Date:&nbsp;
+              | #{moment(document.DueDate).format(config.datetimeformat)} &nbsp;
+          if (document.MtgDate)
+            span
+              strong Meeting Date:&nbsp;
+              | #{moment(document.MtgDate).format(config.dateformat)} &nbsp;
+          if (document.MtgTime)
+            span
+              strong Meeting Time:&nbsp;
+              | #{moment(document.MtgTime).format(config.timeformat)} &nbsp;
+          if (document.Duration)
+            span
+              strong Duration:&nbsp;
+              | #{document.Duration} min. &nbsp;
+          if (document.MtgLocation)
+            span
+              strong Location:&nbsp;
+              | #{document.MtgLocation} &nbsp;
+      div
+        if(document.DocType == "Action Item")
+          strong Assignees:&nbsp;
+        else if(document.DocType == "Meeting")
+          strong Attendees:&nbsp;
+        else
+          strong Reviewers:&nbsp;
+        if (document.PriNameSelection)
+          if(Array.isArray(document.PriNameSelection))
+            each priname in document.PriNameSelection
+              | #{priname} &nbsp;
+          else
+            | #{document.PriNameSelection} &nbsp;
+        if (document.Subteam1)
+          if(Array.isArray(document.Subteam1))
+            each team in document.Subteam1
+              | #{team} &nbsp;
+          else
+            | #{document.Subteam1} &nbsp;
+
+
+    if (document.Body__parsed)
+      div.mail !{sanitizeHtml(document.Body__parsed, config.rttags)}
+    else
+      div.mail No Body Defined
+
+  if (responses && responses.length > 0)
+    each responsedoc in responses
+      +responsedoc(responsedoc)
+
+  div.block-flat
+    form#postform(method="post" action="/teamroom/replyedit/#{db}/#{document.__unid}/new" enctype="multipart/form-data" data-toggle="validator")
+      div.header
+        h3 New Response
+      div.content
+        div.form-group
+          label(for="Subject") Subject
+          input.form-control(type="text" name="Subject" id="Subject" value="" placeholder="Subject" required)
+        div.form-group
+          label(for="Body") Body
+          textarea(name="Body" id="Body")
+        div.form-group
+          label(for="upload") File
+          input.form-control(id="upload" name="upload" type="file")
+
+        input.btn.btn-primary(type="submit" name="save" value="Post Reply")

@@ -1,0 +1,75 @@
+extends layout
+
+block content
+  form.form-horizontal.group-border-dashed(action="/registercc" method="post" id="register-form" data-toggle="validator")
+    div.block-flat
+      div.content
+        div.form-group
+          label.col-sm-3.control-label(for="plan") Plan
+          div.col-sm-4
+            select.form-control(name="plan")
+              each subscription in subscriptions
+                  option(value="#{subscription.id}") #{subscription.name}
+        if (couponrequired == "1")
+          p During our beta phase you must have a valid coupon code to complete registration. If you do not have one, please&nbsp;
+            a(href="/support") contact us
+            | &nbsp;for more details.
+        div.form-group
+          label.col-sm-3.control-label(for="coupon") Coupon
+          div.col-sm-3
+            input.form-control(name="coupon" placeholder="" value="#{orgdata.coupon}" required=(couponrequired=='1'))
+        p You must provide your credit card details to create an account, however you will not be charged for the first 14 days of use and can cancel your account at any time.
+        div.form-group
+          label.col-sm-3.control-label(for="ccnumber") Card Number
+          div.col-sm-3
+            input.form-control(type="number" name="ccnumber" placeholder="1234-5678-9012-3456" data-stripe="number" value="#{orgdata.ccnumber}" required)
+        div.form-group
+          label.col-sm-3.control-label(for="cvcnumber") CVC
+          div.col-md-2
+            input.form-control(type="number" name="cvcnumber" placeholder="123" data-stripe="cvc" value="#{orgdata.cvcnumber}" required)
+        div.form-group
+          label.col-sm-3.control-label(for="expmonth") Expiration
+          div.col-sm-2
+            input.form-control(type="number" name="expmonth" placeholder="MM" data-stripe="exp-month" value="#{orgdata.expmonth}" required)
+          div.col-sm-2
+            input.form-control(type="number" name="expyear" placeholder="YYYY" data-stripe="exp-year" value="#{orgdata.expyear}" required)
+        p If you are within the EU and you do not enter your Address and / or VAT registration details, you will be charged VAT of 20% on each invoice.
+        div.form-group
+          label.col-sm-3.control-label(for="company") Company name
+          div.col-sm-3
+            input.form-control(placeholder="Company Name" name="company" id="company" value="#{orgdata.company}")
+          div.col-md-3
+            input.form-control(placeholder="VAT ID" name="vatid" id="vatid" value="#{orgdata.vatid}")
+        div.form-group
+          label.col-sm-3.control-label(for="address1") Address
+          div.col-sm-3
+            input.form-control(placeholder="Address Line 1" name="address1" id="address1" value="#{orgdata.address1}")
+          div.col-sm-3
+            input.form-control(placeholder="Address Line 2" name="address2" id="address2" value="#{orgdata.address2}")
+        div.form-group
+          div.col-sm-offset-3.col-sm-3
+            input.form-control(placeholder="City" name="city" id="city" value="#{orgdata.city}")
+          div.col-sm-3
+            input.form-control(placeholder="State" name="state" id="state" value="#{orgdata.state}")
+        div.form-group
+          div.col-sm-offset-3.col-sm-3
+            input.form-control(placeholder="Post Code" name="postcode" id="postcode" value="#{orgdata.postcode}")
+          div.col-sm-3
+            select.form-control(name="country" id="country")
+              option(value="" selected=(orgdata.country =="")) Select a country
+              each country in countries
+                option(value="#{country}" selected=(orgdata.country == country)) #{country}
+
+
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-times-circle
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        input.btn.btn-primary(type="submit" name="save" value="Submit")
+
+block extrajs
+  script(src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.8.1/jquery.validate.min.js")
+  script(src="/javascripts/register.js")

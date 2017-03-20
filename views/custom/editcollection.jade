@@ -1,0 +1,157 @@
+extends ../layout
+include ../mixins/pagination
+include ../mixins/nodocumentsfound
+block content
+  form.form-horizontal.group-border-dashed#postform(method="post" action="/custom/editcollection/#{dbinfo.db}/#{collection}" data-toggle="validator")
+    div.block-flat
+      div.header
+        div.pull-right
+          a.btn.btn-info(href="/custom/index/#{dbinfo.db}/#{collection}")
+            i.fa.fa-chevron-left
+            | &nbsp;Back
+          if (isAdmin)
+              input.btn.btn-primary(type="submit" value="Save and Close" disabled=(!isAdmin))
+
+        h3 Collection Settings
+        if (!isAdmin)
+          div.alert.alert-info.alert-white-alt2.rounded
+            div.icon
+              i.fa.fa-info-circle
+            | Only your administrator is allowed to modify collection settings. Please contact them if you would like to change something.
+      div.content
+        div.row
+          div.col-sm-6
+            div.form-group
+              label(for="name") Name
+              input.form-control(name="name" id="name" placeholder="Name" value="#{collection}" disabled)
+            div.form-group
+              label.control-label(for="hidden" data-popover="popover" data-content="Everyone will still be able to get to this collection, but it will be hidden in a collapsed section when viewing the application home page." data-placement="right" data-trigger="hover")
+                | &nbsp;Hide from application home page&nbsp;
+                i.fa.fa-question-circle
+              select.form-control(name="hidden")
+                option(value="0" selected=(collectioninfo.hidden=="0")) No
+                option(value="1" selected=(collectioninfo.hidden=="1")) Yes
+            div.form-group
+              label(for="primaryfield" data-popover="popover" data-content="This will be what is displayed as the main heading for each document when you open the collection." data-placement="right" data-trigger="hover")
+                | Primary Field&nbsp;
+                i.fa.fa-question-circle
+              select.form-control(name="primaryfield" id="primaryfield" onchange="setPrimaryField()" required)
+                each field in metadata.fields
+                  option(value="#{field.fieldname}" selected=(field.position==1)) #{field.fieldname}
+            div.form-group
+              label(for="secondaryfield" data-popover="popover" data-content="This will be what is displayed as the sub heading for each document when you open the collection." data-placement="right" data-trigger="hover")
+                | Secondary Field&nbsp;
+                i.fa.fa-question-circle
+              select.form-control(name="secondaryfield" id="secondaryfield" onchange="setSecondaryField()" required)
+                each field in metadata.fields
+                  option(value="#{field.fieldname}" selected=(field.position == 2)) #{field.fieldname}
+            if (dbinfo.meta && dbinfo.meta.collections)
+              div.form-group
+                label.control-label(for="allowresponses") Allow responses to be added to documents
+                select.form-control(name="allowresponses" id="allowresponses" onchange="toggleResponseCollection()")
+                  option(value="0" selected=(collectioninfo.allowresponses=="0")) No
+                  option(value="1" selected=(collectioninfo.allowresponses=="1")) Yes
+              div.form-group.responsecollection
+                label.control-label(for="responsecollection") Which type of document is created as a response?
+                select.form-control(name="responsecollection")
+                  each coll in dbinfo.meta.collections
+                    option(value="#{coll.name}" selected=(collectioninfo.responsecollection==coll.name)) #{coll.title}
+            div.form-group
+              label.control-label(for="allowattachments") Allow attachments to be added to documents?
+              select.form-control(name="allowattachments" id="allowattachments")
+                option(value="0" selected=(collectioninfo.allowattachments=="0")) No
+                option(value="1" selected=(collectioninfo.allowattachments=="1")) Yes
+            div.form-group
+              label.control-label(for="allowdeletions") Allow documents to be deleted?
+              select.form-control(name="allowdeletions" id="allowdeletions")
+                option(value="0" selected=(collectioninfo.allowdeletions=="0")) No
+                option(value="1" selected=(collectioninfo.allowdeletions=="1")) Yes
+
+          div.col-sm-6
+            div.form-group
+              label(for="title") Title
+              input.form-control(name="title" id="title" placeholder="Title" value="#{collectioninfo.title}" required)
+            div.form-group
+              label(for="sortby") Sort By
+              select.form-control(name="sortby" id="sortby" required)
+                option(value="__created" selected=(collectioninfo.sortby == "__created")) Date Created
+                option(value="__modified" selected=(collectioninfo.sortby == "__modified")) Date Modified
+                option(value="primary" selected=(collectioninfo.sortby == "primary")) Primary Field
+            div.form-group
+              label(for="sortdirection") Sort Direction
+              select.form-control(name="sortdirection" id="sortdirection" required)
+                option(value="asc" selected=(collectioninfo.sortdirection == "asc")) Ascending
+                option(value="desc" selected=(collectioninfo.sortdirection == "desc")) Descending
+            div.form-group
+              label.control-label(for="allowcreate") Allow creation of new documents in this collection
+              select.form-control(name="allowcreate")
+                option(value="0" selected=(collectioninfo.allowcreate=="0")) No
+                option(value="1" selected=(collectioninfo.allowcreate=="1")) Yes
+            div.form-group
+              label.control-label(for="allowedit") Allow editing of documents in this collection
+              select.form-control(name="allowedit")
+                option(value="0" selected=(collectioninfo.allowedit=="0")) No
+                option(value="1" selected=(collectioninfo.allowedit=="1")) Yes
+    div.block-flat
+      div.header
+        h3 Choose Fields to display
+      div.content
+        table.table.ui-sortable
+          thead
+            tr
+              th Name&nbsp;
+                i.fa.fa-question-circle(data-popover="popover" data-content="The name of the field stored in the database. You can't change this." data-placement="top" data-trigger="hover")
+              th Display&nbsp;
+                i.fa.fa-question-circle(data-popover="popover" data-content="Check this if you want to display the field when viewing a document." data-placement="top" data-trigger="hover")
+              th Label&nbsp;
+                i.fa.fa-question-circle(data-popover="popover" data-content="This is the label that will get displayed with the field. If you leave this blank, we'll display the field name." data-placement="top" data-trigger="hover")
+              th Sort Order&nbsp;
+                i.fa.fa-question-circle(data-popover="popover" data-content="The position of the field when you are viewing a document. You can either edit the numbers, or drag and drop fields to re-order them." data-placement="top" data-trigger="hover")
+              th Data Type&nbsp;
+                i.fa.fa-question-circle(data-popover="popover" data-content="We'll format the data based on what you select here. If you have dates then select date as the field type and we'll make the value nice and readable. Likewise with rich text etc." data-placement="top" data-trigger="hover")
+              th Required&nbsp;
+                i.fa.fa-question-circle(data-popover="popover" data-content="Check this if you to make this field mandatory when creating or editing a document." data-placement="top" data-trigger="hover")
+              th Options&nbsp;
+                i.fa.fa-question-circle(data-popover="popover" data-content="Enter options here when the field data type is set to Select or Select Multi." data-placement="top" data-trigger="hover")
+          tbody
+            each field in metadata.fields
+              tr
+                td #{field.fieldname}
+                td
+                  input(type="checkbox" name="#{field.fieldname}_key" value="1" checked=(field.keyfield))
+                td
+                  input.form-control(name="#{field.fieldname}_label" value="#{field.fieldlabel==''?sanitiseFieldLabel(field.fieldname):field.fieldlabel}")
+                td
+                  input.form-control.position(name="#{field.fieldname}_position" value="#{field.position==999?'':field.position}")
+                td
+                  select.form-control(name="#{field.fieldname}" id="#{field.fieldname}")
+                    option(value="text" selected=(field.fieldtype=='text')) Text
+                    option(value="number" selected=(field.fieldtype=='number')) Number
+                    option(value="tel" selected=(field.fieldtype=='tel')) Telephone Number
+                    option(value="url" selected=(field.fieldtype=='url')) URL
+                    option(value="date" selected=(field.fieldtype=='date')) Date
+                    option(value="datetime" selected=(field.fieldtype=='datetime')) Date/Time
+                    option(value="time" selected=(field.fieldtype=='time')) Time
+                    option(value="month" selected=(field.fieldtype=='month')) Month
+                    option(value="week" selected=(field.fieldtype=='week')) Week
+                    option(value="color" selected=(field.fieldtype=='color')) Colour
+                    option(value="email" selected=(field.fieldtype=='email')) Email
+                    option(value="select" selected=(field.fieldtype=='select')) Select
+                    option(value="selectmulti" selected=(field.fieldtype=='selectmulti')) Select Multi
+                    option(value="richtext" selected=(field.fieldtype=='richtext')) richtext
+                    option(value="Names" selected=(field.fieldtype=='Names')) Names
+                    option(value="Authors" selected=(field.fieldtype=='Authors')) Authors
+                    option(value="Readers" selected=(field.fieldtype=='Readers')) Readers
+                td
+                  input(type="checkbox" name="#{field.fieldname}_mandatory" value="1" checked=(field.mandatory))
+                td
+                  input.form-control(name="#{field.fieldname}_options" value="#{field.combooptions?field.combooptions.join(','):''}" placeholder="Option 1,Option2")
+      div.foot
+        a.btn.btn-info(href="/custom/index/#{dbinfo.db}/#{collection}")
+          i.fa.fa-chevron-left
+          | &nbsp;Back
+        if (isAdmin)
+          input.btn.btn-primary(type="submit" value="Save and Close" disabled=(!isAdmin))
+block extrajs
+  script(src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js")
+  script(src="/javascripts/editcollection.js")

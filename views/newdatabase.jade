@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  div.row
+    div.col-sm-6
+      if(databases.length < maxdbs)
+        div.block-flat
+          div.header
+            h3 New Database
+          div.content
+            div.form-group
+              label(for="template") Select Database Type
+              select.form-control(name="template" id="template" required)
+                option(value="") Select Database Template
+                option(value="discussion") Discussion
+                option(value="doclibrary") Document Library
+                option(value="journal") Journal
+                option(value="personalnab") Personal Address Book
+                option(value="teamroom") Teamroom
+            div.form-group
+              label(for="databasetitle") Enter New Database Title
+              input.form-control(name="databasetitle" id="databasetitle" required)
+              span.databaseerror
+          div.foot
+            input.btn.btn-primary(type="button" onclick="createNewDatabase()" value="Create New Database")
+      else
+        div.block-flat.danger-box
+          div.header
+            h3 Maximum Databases Reached
+          div.content
+            p Your current plan allows you to have #{maxdbs} databases. You have reached this limit.
+          div.foot
+            a.btn.btn-primary(href="/account") Upgrade your account...
+
+block extrajs
+  script(src="/javascripts/newdatabase.js")

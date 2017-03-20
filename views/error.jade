@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  div.block-flat.danger-box
+    div.header
+      h3 #{error.status} - #{message}
+    div.content
+      p #{error.stack}

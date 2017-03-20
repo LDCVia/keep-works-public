@@ -1,0 +1,67 @@
+extends ../layout
+include ../mixins/pagination
+block content
+  div
+    ul.nav.nav-tabs(role="tablist")
+      li.active(role="presentation")
+        a(href="#memos" aria-controls="memos" role="tab" data-toggle="tab") Mails
+      li(role="presentation")
+        a(href="#responses" aria-controls="responses" role="tab" data-toggle="tab") Replies
+  div.tab-content
+    div.tab-pane.active#memos(role="tabpanel")
+      div.content
+        div.mail-inbox
+          div.head
+            div.col-sm-6
+              form.search-form(role="search" action="/#{template}/search/#{db}" method="get")
+                div.input-group
+                  input.form-control(name="keywords" type="text" placeholder="Search" value="#{query?query:''}")
+                  span.input-group-btn
+                    button.btn.btn-default(type="submit") Search...
+
+
+          div.mails
+            each topic in memos.data
+              div.item
+                div
+                  span.date.pull-right
+                    if(topic._files)
+                      i.fa.fa-paperclip
+                    | #{moment(topic.__created).fromNowOrNow()}
+                  a(href="/mail/document/#{db}/#{topic.__unid}")
+                    h4.from #{topic.Subject}
+                  p.msg
+                    span
+                      | #{formatNotesName(topic.From)}
+                      | &nbsp;
+    div.tab-pane#responses(role="tabpanel")
+      div.content
+        div.mail-inbox
+          div.head
+            div.col-sm-6
+              form.search-form(role="search" action="/#{template}/search/#{db}" method="get")
+                div.input-group
+                  input.form-control(name="keywords" type="text" placeholder="Search" value="#{query?query:''}")
+                  span.input-group-btn
+                    button.btn.btn-default(type="submit") Search...
+
+
+          div.mails
+            if (responses.data.length > 0)
+              each topic in responses.data
+                div.item
+                  div
+                    span.date.pull-right
+                      if(topic._files)
+                        i.fa.fa-paperclip
+                      | #{moment(topic.__created).fromNowOrNow()}
+                    a(href="/mail/response/#{db}/#{topic.__unid}")
+                      h4.from #{topic.Subject}
+                    p.msg
+                      span
+                        | #{formatNotesName(topic.From)}
+                        | &nbsp;
+            else
+              div.item
+                div
+                  h4 No Matching Documents Found

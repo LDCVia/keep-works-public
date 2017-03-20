@@ -1,0 +1,43 @@
+//- Pagination mixin
+//- ----------------
+//- start=# to start pagination at
+//- numpages=# links to serve up
+//- base=base url before num
+//-
+//- Example:
+//- pagination(1,5,4,'/fda/','?param=test')
+//- Yields: | < | 3 | 4 | 5 | 6 | 7 | > |
+//- « = /fda/2, 3 = /fda/3, 4 = #, .. 7 = /fda/7, » = /fda/8
+//- querystring will be added to any link if defined
+mixin pagination(start, numpages, curr, base, querystring)
+  - var querystring = querystring?querystring:''
+  - var curr = typeof curr=="string"?parseInt(curr, 10):curr
+  if(numpages > 1)
+    nav.pull-right
+      ul.pagination
+        - if(curr > 1)
+          li
+            a(href="#{base}#{curr - 1}#{querystring}")
+              i.fa.fa-angle-left
+        - else
+          li.disabled
+            a(href="#")
+              i.fa.fa-angle-left
+        - var lower = curr-2; if(curr >= (numpages - 2)){lower = (numpages - 4)}
+        - var upper = curr+2; if(upper < 5 && numpages >= 5){upper = 5}
+        - for(var i = lower; i <= upper; ++i)
+          - if (i <= numpages && i > 0)
+            - if (i !== curr)
+              li
+                a(href="#{base}#{i}#{querystring}")=i
+            - else
+              li.active
+                a(href="#{base}#{i}#{querystring}")=i
+        - if(curr < numpages)
+          li
+            a(href="#{base}#{curr + 1}#{querystring}")
+              i.fa.fa-angle-right
+        - else
+          li.disabled
+            a(href="#")
+              i.fa.fa-angle-right

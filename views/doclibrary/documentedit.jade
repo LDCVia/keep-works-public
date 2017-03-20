@@ -1,0 +1,67 @@
+extends ../layout
+
+block content
+  form#postform(method="post" action="/doclibrary/documentedit/#{db}/#{document.__unid}" enctype="multipart/form-data" data-toggle="validator")
+    div.block-flat
+      div.header
+        h3 New Topic
+      div.content
+        div.form-group
+          label(for="Subject") Subject
+          input.form-control(type="text" name="Subject" id="Subject" value="#{document.Subject}" placeholder="Subject" required)
+        if(dbinfo.meta && dbinfo.meta.security == "1")
+          div.form-group
+            label(for="MarkPrivate") Mark Private&nbsp;
+            if(!document.readers || document.readers == "")
+              input(type="checkbox" name="MarkPrivate" value="1")
+            else
+              input(type="checkbox" name="MarkPrivate" value="1" checked)
+        div.form-group
+          label(for="ReviewerList") Reviewers
+          select.form-control(name="ReviewerList" id="ReviewerList" multiple="true")
+            each orguser in orgusers
+              if (orguser != "")
+                if (document.ReviewerList && (document.ReviewerList.indexOf(orguser) > -1 || document.ReviewerList.indexOf(formatNotesName(orguser)) > -1))
+                  option(value="#{formatNotesName(orguser)}" selected) #{formatNotesName(orguser)}
+                else
+                  option(value="#{formatNotesName(orguser)}") #{formatNotesName(orguser)}
+
+        div.form-group
+          label(for="Categories") Categories
+          select.form-control(name="Categories" id="Categories" multiple="true")
+            each category in CategoryOptions
+              if (category != "")
+                if (document.Categories && document.Categories.indexOf(category) > -1)
+                  option(value="#{category}" selected) #{category}
+                else
+                  option(value="#{category}") #{category}
+        div.form-group
+          label(for="NewCategories") Other Categories
+          input.form-control(type="text" name="NewCategories" id="NewCategories" value="#{document.NewCategories?document.NewCategories:''}" placeholder="New Category 1, New Category 2")
+        div.form-group
+          label(for="Body") Body
+          textarea(name="Body" id="Body") #{document.Body__parsed}
+        div.form-group
+          label(for="upload") File
+          input.form-control(id="upload" name="upload" type="file")
+        if (document._files && document._files.length > 0)
+          div.form-group
+            label Delete Files
+            if (Array.isArray(document._files))
+              div.btn-group
+                each file in document._files
+                  a.btn.btn-danger(href="#" onclick="deleteFile(this, '#{file}', '/doclibrary/file/#{db}/MainTopic/#{document.__unid}/#{file}')")
+                    i.fa.fa-trash
+                    | &nbsp;Delete '#{file}'
+        if(error)
+          div.alert.alert-danger.alert-white-alt.rounded
+            div.icon
+              i.fa.fa-warning
+            strong Error!&nbsp;
+            | #{error}
+      div.foot
+        input(type="hidden" name="From" value="#{document.From?document.From:''}")
+        button.btn.btn-info(onclick="window.history.back();return false;")
+          i.fa.fa-chevron-left
+          | Back
+        input.btn.btn-primary(type="submit" name="save" value="Submit")

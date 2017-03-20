@@ -1,0 +1,30 @@
+mixin responsedoc(responsedoc)
+  div.block-flat
+    div.header
+      if(responsedoc.Subject)
+        h3 #{responsedoc.Subject}
+      else
+        h3 #{responsedoc.__unid}
+      h4
+        if (responsedoc.AbbreviateFrom)
+          a(href="/doclibrary/user/#{db}/#{encodeURIComponent(responsedoc.From)}") #{responsedoc.AbbreviateFrom}
+        else
+          a(href="/doclibrary/user/#{db}/#{encodeURIComponent(responsedoc.From)}") #{formatNotesName(responsedoc.From)}
+        span.pull-right #{moment(responsedoc.__created).format(config.datetimeformat)}
+      if(responsedoc._files)
+        div
+          strong Files:
+          if(Array.isArray(responsedoc._files))
+            each file in responsedoc._files
+              a.label.label-default(href="/doclibrary/file/#{db}/#{responsedoc.__form}/#{responsedoc.__unid}/#{file}") #{file}
+          else
+            a.label.label-default(href="/doclibrary/file/#{db}/#{responsedoc.__form}/#{responsedoc.__unid}/#{document._files}") #{responsedoc._files}
+    div.content
+      if (responsedoc.Body__parsed)
+        div.mail !{sanitizeHtml(responsedoc.Body__parsed, config.rttags)}
+      else
+        div.mail No Body Defined
+
+      if(responsedoc.children)
+        each child in responsedoc.children
+          +responsedoc(child)
