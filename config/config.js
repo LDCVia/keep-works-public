@@ -14,8 +14,8 @@
   /* Re-captcha */
   /* Get your key / secret from https://developers.google.com/recaptcha/docs/start */
   out.recaptcha = {
-    key: 'recaptcha-key',
-    secret: 'recaptcha-secret'
+    key: process.env.RECAPTCHA_KEY || 'recaptcha-key',
+    secret: process.env.RECAPTCHA_SECRET || 'recaptcha-secret'
   };
   out.couponrequired = process.env.COUPON_REQUIRED || "0";
   out.enableregistration = process.env.ENABLEREGISTRATION && process.env.ENABLEREGISTRATION == "1" || false;
