@@ -4,7 +4,7 @@
   var out = {};
   out.env = env;
   out.apihost = process.env.LDCVIA_APIHOST || "https://eu.ldcvia.com/1.0";
-  out.host = process.env.LDCVIA_HOST || "https://local.ldcvia.com:3001";
+  out.host = process.env.LDCVIA_HOST || "https://beta.ldcvia.com";
   out.apphost = process.env.LDCVIA_APPHOST || 'https://localhost:5000/';
   out.sitetitle = process.env.SITETITLE || "keep.works";
   out.adminapikey = process.env.LDCVIA_ADMINKEY || 'ldcvia-adminkey';

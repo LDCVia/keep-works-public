@@ -37,8 +37,6 @@ html(lang='en')
             li.page-scroll
               a(href='#features') Features
             li.page-scroll
-              a(href="#pricing") Pricing
-            li.page-scroll
               a(href='#about') About
             if(!email)
               li.page-scroll
@@ -116,84 +114,7 @@ html(lang='en')
                   i.fa.fa-search-plus.fa-3x
               div.feature-text Custom Applications
               img.img-responsive(src='/images/custom-lg.png', alt='Custom applications')
-    //Pricing section
-    section#pricing.success
-      .container
-        .row
-          .col-lg-12.text-center
-            h2 Pricing
-            hr.star-light
-        .row
-          .col-lg-4.col-lg-offset-4
-            table.no-border.table
-              thead.no-border
-                tr
-                  th(style="width:30%;")
-                  th.text-center Personal
-                  th.text-center.primary-emphasis Team
-              tbody.no-border-y
-                tr
-                  td 14 day free trial
-                  td.text-center
-                    i.fa.fa-check
-                  td.text-center.primary-emphasis
-                    i.fa.fa-check
-                tr
-                  td Unlimited users
-                    sup *
-                  td.text-center
-                    i.fa.fa-check
-                  td.text-center.primary-emphasis
-                    i.fa.fa-check
-                tr
-                  td Unlimited usage
-                    sup *
-                  td.text-center
-                    i.fa.fa-check
-                  td.text-center.primary-emphasis
-                    i.fa.fa-check
-                tr
-                  td Databases
-                  td.text-center 2
-                  td.text-center.primary-emphasis 10
-                tr
-                  td Documents
-                  td.text-center 10,000
-                  td.text-center.primary-emphasis 50,000
-                tr
-                  td Storage
-                  td.text-center 1GB
-                  td.text-center.primary-emphasis 2GB
-                tr
-                  td Price
-                    if (xrates)
-                      sup **
-                      br
-                      ul#currencies.nav.nav-pills
-                        li.active(onclick="togglePrice('GBP', this)")
-                          a.small-pill(href="#pricing") £
-                        li(onclick="togglePrice('USD', this)")
-                          a.small-pill(href="#pricing") $
-                        li(onclick="togglePrice('EUR', this)")
-                          a.small-pill(href="#pricing") €
-                  td.text-center
-                    span.gbp £20 / month
-                    if (xrates)
-                      span.usd.hidden $#{(20 * xrates.rates.USD).toFixed(2)} / month
-                      span.eur.hidden €#{(20 * xrates.rates.EUR).toFixed(2)} / month
-                  td.text-center.primary-emphasis-dark
-                    span.gbp £50 / month
-                    if (xrates)
-                      span.usd.hidden $#{(50 * xrates.rates.USD).toFixed(2)} / month
-                      span.eur.hidden €#{(50 * xrates.rates.EUR).toFixed(2)} / month
 
-            small * subject to standard fair-use policies
-            if (xrates)
-              small ** All invoices are in GBP. Exchange rates are indicative only, based on rates dated #{xrates.date}. VAT will be charged where applicable.
-            hr
-            p Need more databases, documents or storage? Please&nbsp;
-              a(href="#support") contact us
-              | &nbsp;and we can discuss your requirements.
     // About Section
     section#about
       .container
@@ -305,34 +226,6 @@ html(lang='en')
     footer.text-center
       .footer-above
         .container
-          .row
-            .footer-col.col-md-4
-              h3 Location
-              p
-                | LDC Via Ltd
-                br
-                | 14 Roseberry Avenue
-                br
-                | London EC1R 4TD
-                br
-                | United Kingdom
-            .footer-col.col-md-4
-              h3 Around the Web
-              ul.list-inline
-                li
-                  a.btn-social.btn-outline(href='http://facebook.com/keepdotworks')
-                    i.fa.fa-fw.fa-facebook
-                li
-                  a.btn-social.btn-outline(href='http://twitter.com/keep_works')
-                    i.fa.fa-fw.fa-twitter
-            .footer-col.col-md-4
-              h3 About <span class="keepworks">keep.works</span>
-              p
-                <span class="keepworks">keep.works</span> lets you manage your team data and is <a href="http://ldcvia.com">built on LDC Via</a>.
-              p
-                a(href='#sla', data-toggle="modal") Service Level Agreement
-              p
-                a(href='#terms', data-toggle="modal") Terms and Conditions
       .footer-below
         .container
           .row
